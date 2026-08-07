@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/nav_dashboard" />
+        <!-- بیمار -->
+        <item
+            android:id="@+id/nav_doctors"
+            android:icon="@drawable/ic_medical"
+            android:title="@string/nav_doctors" />
+        <item
+            android:id="@+id/nav_appointments"
+            android:icon="@drawable/ic_calendar"
+            android:title="@string/nav_appointments" />
+        <!-- پزشک -->
+        <item
+            android:id="@+id/nav_doctor_appointments"
+            android:icon="@drawable/ic_schedule"
+            android:title="@string/nav_doctor_appointments" />
+        <!-- ادمین -->
+        <item
+            android:id="@+id/nav_admin_doctors"
+            android:icon="@drawable/ic_medical"
+            android:title="@string/nav_admin_doctors" />
+        <item
+            android:id="@+id/nav_admin_users"
+            android:icon="@drawable/ic_person"
+            android:title="@string/nav_admin_users" />
+        <!-- مشترک -->
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person"
+            android:title="@string/nav_profile" />
+    </group>
+</menu>

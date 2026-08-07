@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:15
+    container_name: badoki-db
+    environment:
+      POSTGRES_DB: badoki
+      POSTGRES_USER: badoki
+      POSTGRES_PASSWORD: badoki
+    ports:
+      - "5432:5432"
+    volumes:
+      - badoki_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U badoki -d badoki"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  badoki_pgdata:

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">بادُکی</string>
+    <string name="app_tagline">رزرو آنلاین نوبت پزشک</string>
+
+    <!-- منو -->
+    <string name="nav_dashboard">داشبورد</string>
+    <string name="nav_doctors">پزشکان</string>
+    <string name="nav_appointments">نوبت‌های من</string>
+    <string name="nav_profile">پروفایل</string>
+    <string name="nav_logout">خروج از حساب</string>
+
+    <!-- عمومی -->
+    <string name="loading">در حال بارگذاری…</string>
+    <string name="retry">تلاش دوباره</string>
+    <string name="error_network">خطا در ارتباط با سرور. اتصال اینترنت را بررسی کنید</string>
+    <string name="error_generic">مشکلی پیش آمد. دوباره تلاش کنید</string>
+    <string name="cancel">انصراف</string>
+    <string name="confirm">تأیید</string>
+    <string name="save">ذخیره</string>
+    <string name="close">بستن</string>
+    <string name="toman">تومان</string>
+    <string name="rating_suffix">از ۵</string>
+    <string name="years_exp">سال سابقه</string>
+    <string name="reviews">نظر</string>
+    <string name="optional">(اختیاری)</string>
+
+    <!-- احراز هویت -->
+    <string name="auth_welcome">به بادُکی خوش آمدید</string>
+    <string name="auth_subtitle">نوبت پزشک را آنلاین رزرو کنید؛ بدون تماس و معطلی</string>
+    <string name="login_title">ورود به حساب</string>
+    <string name="login_btn">ورود</string>
+    <string name="register_title">ساخت حساب جدید</string>
+    <string name="register_btn">ثبت‌نام</string>
+    <string name="email_hint">ایمیل</string>
+    <string name="password_hint">رمز عبور</string>
+    <string name="password_confirm_hint">تکرار رمز عبور</string>
+    <string name="fullname_hint">نام و نام خانوادگی</string>
+    <string name="phone_hint">شماره موبایل (۰۹…)…</string>
+    <string name="no_account">حساب ندارید؟ ثبت‌نام کنید</string>
+    <string name="have_account">قبلاً ثبت‌نام کرده‌اید؟ وارد شوید</string>
+    <string name="demo_hint">حساب نمونه: ali@example.com — رمز: 123456</string>
+    <string name="err_email_required">ایمیل را وارد کنید</string>
+    <string name="err_email_invalid">فرمت ایمیل صحیح نیست</string>
+    <string name="err_password_required">رمز عبور را وارد کنید</string>
+    <string name="err_password_short">رمز عبور حداقل ۶ کاراکتر باشد</string>
+    <string name="err_password_mismatch">رمز عبور و تکرار آن یکسان نیستند</string>
+    <string name="err_name_required">نام و نام خانوادگی را وارد کنید</string>
+    <string name="err_phone_invalid">شماره موبایل باید با ۰۹ شروع شود و ۱۱ رقم باشد</string>
+
+    <!-- داشبورد -->
+    <string name="dashboard_greeting">سلام، %1$s 👋</string>
+    <string name="dashboard_upcoming">نوبت پیش رو</string>
+    <string name="dashboard_completed">انجام‌شده</string>
+    <string name="dashboard_canceled">لغو شده</string>
+    <string name="dashboard_next_appointment">نوبت بعدی شما</string>
+    <string name="dashboard_no_appointment">هنوز نوبتی رزرو نکرده‌اید</string>
+    <string name="dashboard_no_appointment_sub">پزشک مناسب خود را پیدا کنید و در چند ثانیه نوبت بگیرید</string>
+    <string name="dashboard_find_doctor">جستجوی پزشک</string>
+    <string name="dashboard_my_appointments">نوبت‌های من</string>
+    <string name="dashboard_top_doctors">پزشکان برتر</string>
+    <string name="dashboard_see_all">مشاهده همه</string>
+
+    <!-- پزشکان -->
+    <string name="doctors_title">پزشکان</string>
+    <string name="search_placeholder">جستجوی نام پزشک…</string>
+    <string name="filter_specialty">تخصص</string>
+    <string name="filter_city">شهر</string>
+    <string name="filter_all">همه</string>
+    <string name="doctors_empty_title">پزشکی پیدا نشد</string>
+    <string name="doctors_empty_sub">فیلترها را تغییر دهید یا عبارت دیگری جستجو کنید</string>
+    <string name="doctor_visit_price">هزینه ویزیت: %1$s</string>
+    <string name="available_days">روزهای ویزیت</string>
+    <string name="choose_date">انتخاب تاریخ</string>
+    <string name="choose_time">انتخاب ساعت</string>
+    <string name="no_slots_title">در این روز نوبت خالی نیست</string>
+    <string name="no_slots_sub">تاریخ دیگری را امتحان کنید</string>
+    <string name="select_slot_hint">یک ساعت را انتخاب کنید</string>
+    <string name="book_appointment">رزرو نوبت</string>
+    <string name="book_title">تأیید رزرو نوبت</string>
+    <string name="book_summary">%1$s — %2$s</string>
+    <string name="book_notes_hint">توضیحات (اختیاری)…</string>
+    <string name="book_success_title">نوبت با موفقیت رزرو شد ✅</string>
+    <string name="book_success_sub">نوبت شما برای %1$s ساعت %2$s ثبت شد</string>
+    <string name="book_view_appointments">مشاهده نوبت‌های من</string>
+    <string name="book_another">رزرو نوبت دیگر</string>
+    <string name="day_off">روز غیرکاری</string>
+    <string name="doctor_not_found">پزشک پیدا نشد</string>
+
+    <!-- نوبت‌ها -->
+    <string name="appointments_title">نوبت‌های من</string>
+    <string name="tab_all">همه</string>
+    <string name="tab_upcoming">پیش رو</string>
+    <string name="tab_past">گذشته</string>
+    <string name="tab_canceled">لغو شده</string>
+    <string name="status_CONFIRMED">قطعی</string>
+    <string name="status_PENDING">در انتظار</string>
+    <string name="status_COMPLETED">انجام‌شده</string>
+    <string name="status_CANCELED">لغو شده</string>
+    <string name="appointments_empty_title">نوبتی پیدا نشد</string>
+    <string name="appointments_empty_sub">با پزشکان برتر شروع کنید و اولین نوبت خود را رزرو کنید</string>
+    <string name="cancel_appointment">لغو نوبت</string>
+    <string name="reschedule_appointment">تغییر زمان</string>
+    <string name="delete_appointment">حذف</string>
+    <string name="cancel_confirm_title">لغو نوبت</string>
+    <string name="cancel_confirm_message">از لغو این نوبت مطمئن هستید؟</string>
+    <string name="delete_confirm_title">حذف نوبت</string>
+    <string name="delete_confirm_message">این نوبت برای همیشه حذف خواهد شد. ادامه می‌دهید؟</string>
+    <string name="reschedule_title">تغییر زمان نوبت</string>
+    <string name="reschedule_btn">ثبت زمان جدید</string>
+    <string name="appointment_canceled_toast">نوبت لغو شد</string>
+    <string name="appointment_rescheduled_toast">زمان نوبت تغییر کرد</string>
+    <string name="appointment_deleted_toast">نوبت حذف شد</string>
+    <string name="action_failed">عملیات ناموفق بود. دوباره تلاش کنید</string>
+    <string name="action_failed_rollback">عملیات ناموفق بود — تغییرات بازگردانی شد</string>
+
+    <!-- پروفایل -->
+    <string name="profile_title">پروفایل</string>
+    <string name="profile_member_since">عضو از %1$s</string>
+    <string name="profile_edit">ویرایش اطلاعات</string>
+    <string name="profile_edit_title">ویرایش پروفایل</string>
+    <string name="profile_about_title">درباره بادُکی</string>
+    <string name="profile_about_text">بادُکی یک سامانه نمونه رزرو آنلاین نوبت پزشک است که با Spring Boot و Android ساخته شده است. بیماران می‌توانند نوبت بگیرند، پزشکان نوبت‌ها را تأیید و مدیریت کنند و مدیر سیستم، پزشکان و کاربران را مدیریت کند.</string>
+    <string name="profile_version">نسخه ۱.۰.۰</string>
+    <string name="profile_updated">پروفایل با موفقیت به‌روزرسانی شد</string>
+    <string name="logout_confirm_title">خروج از حساب</string>
+    <string name="logout_confirm_message">از حساب کاربری خارج می‌شوید؟</string>
+
+    <!-- تقویم -->
+    <string name="today">امروز</string>
+    <string name="tomorrow">فردا</string>
+    <string name="weekday_SATURDAY">شنبه</string>
+    <string name="weekday_SUNDAY">یکشنبه</string>
+    <string name="weekday_MONDAY">دوشنبه</string>
+    <string name="weekday_TUESDAY">سه‌شنبه</string>
+    <string name="weekday_WEDNESDAY">چهارشنبه</string>
+    <string name="weekday_THURSDAY">پنجشنبه</string>
+    <string name="weekday_FRIDAY">جمعه</string>
+    <string name="month_1">فروردین</string>
+    <string name="month_2">اردیبهشت</string>
+    <string name="month_3">خرداد</string>
+    <string name="month_4">تیر</string>
+    <string name="month_5">مرداد</string>
+    <string name="month_6">شهریور</string>
+    <string name="month_7">مهر</string>
+    <string name="month_8">آبان</string>
+    <string name="month_9">آذر</string>
+    <string name="month_10">دی</string>
+    <string name="month_11">بهمن</string>
+    <string name="month_12">اسفند</string>
+
+    <string-array name="jalali_months">
+        <item>فروردین</item>
+        <item>اردیبهشت</item>
+        <item>خرداد</item>
+        <item>تیر</item>
+        <item>مرداد</item>
+        <item>شهریور</item>
+        <item>مهر</item>
+        <item>آبان</item>
+        <item>آذر</item>
+        <item>دی</item>
+        <item>بهمن</item>
+        <item>اسفند</item>
+    </string-array>
+    <!-- نقش‌ها -->
+    <string name="role_PATIENT">بیمار</string>
+    <string name="role_DOCTOR">پزشک</string>
+    <string name="role_ADMIN">مدیر سیستم</string>
+
+    <!-- منوی پزشک -->
+    <string name="nav_doctor_appointments">نوبت‌های بیماران</string>
+    <string name="doctor_greeting">سلام دکتر، %1$s 👋</string>
+    <string name="doctor_stats_today">نوبت امروز</string>
+    <string name="doctor_stats_upcoming">پیش رو</string>
+    <string name="doctor_stats_completed">انجام‌شده</string>
+    <string name="doctor_stats_canceled">لغو شده</string>
+    <string name="doctor_next_appointment">نوبت بعدی شما</string>
+    <string name="doctor_no_appointments_title">نوبتی ثبت نشده</string>
+    <string name="doctor_no_appointments_sub">وقتی بیماران برای شما نوبت بگیرند، اینجا می‌بینید</string>
+    <string name="patient_info">بیمار</string>
+    <string name="btn_confirm_appointment">تأیید نوبت</string>
+    <string name="btn_complete_appointment">انجام شد</string>
+    <string name="btn_cancel_appointment">لغو نوبت</string>
+    <string name="appointment_confirmed_toast">نوبت تأیید شد</string>
+    <string name="appointment_completed_toast">نوبت انجام‌شده ثبت شد</string>
+    <string name="doctor_profile_title">پروفایل پزشک</string>
+    <string name="doctor_profile_edit">ویرایش پروفایل پزشک</string>
+    <string name="doctor_profile_saved">پروفایل پزشک به‌روزرسانی شد</string>
+    <string name="doctor_edit_hours">ساعات کاری</string>
+    <string name="doctor_edit_price">هزینه ویزیت (تومان)</string>
+    <string name="doctor_edit_hospital">نام بیمارستان/کلینیک</string>
+    <string name="doctor_edit_address">آدرس</string>
+    <string name="doctor_edit_bio">درباره من</string>
+    <string name="doctor_edit_start">ساعت شروع (۰-۲۳)</string>
+    <string name="doctor_edit_end">ساعت پایان (۱-۲۴)</string>
+    <string name="doctor_edit_slot">مدت هر نوبت (دقیقه)</string>
+    <string name="doctor_edit_days">روزهای کاری</string>
+    <string name="err_required">این فیلد الزامی است</string>
+    <string name="err_hours">ساعت پایان باید بزرگ‌تر از شروع باشد</string>
+
+    <!-- منوی ادمین -->
+    <string name="nav_admin_doctors">مدیریت پزشکان</string>
+    <string name="nav_admin_users">مدیریت کاربران</string>
+    <string name="admin_greeting">سلام مدیر 👋</string>
+    <string name="admin_stats_doctors">پزشک</string>
+    <string name="admin_stats_patients">بیمار</string>
+    <string name="admin_stats_appointments">نوبت</string>
+    <string name="admin_stats_pending">در انتظار تأیید</string>
+    <string name="admin_add_doctor">افزودن پزشک</string>
+    <string name="admin_edit_doctor">ویرایش پزشک</string>
+    <string name="admin_delete_doctor">حذف</string>
+    <string name="admin_delete_confirm_title">حذف پزشک</string>
+    <string name="admin_delete_confirm_message">این پزشک و نوبت‌هایش برای همیشه حذف می‌شوند. ادامه می‌دهید؟</string>
+    <string name="admin_doctor_saved">پزشک ذخیره شد</string>
+    <string name="admin_doctor_deleted">پزشک حذف شد</string>
+    <string name="admin_form_name">نام و نام خانوادگی</string>
+    <string name="admin_form_specialty">تخصص</string>
+    <string name="admin_form_city">شهر</string>
+    <string name="admin_form_experience">سال سابقه</string>
+    <string name="admin_form_account">حساب کاربری پزشک (اختیاری)</string>
+    <string name="admin_form_email">ایمیل حساب</string>
+    <string name="admin_form_password">رمز عبور (پیش‌فرض ۱۲۳۴۵۶)</string>
+    <string name="admin_users_empty">کاربری یافت نشد</string>
+    <string name="admin_doctors_empty">هنوز پزشکی ثبت نشده. اولین پزشک را اضافه کنید</string>
+    <string name="appointments_doctor_empty">نوبتی برای شما ثبت نشده</string>
+</resources>

@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: badoki
+  datasource:
+    # PostgreSQL — با docker-compose بالا می‌آید:
+    #   docker compose up -d
+    url: jdbc:postgresql://localhost:5432/badoki
+    username: badoki
+    password: badoki
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  jackson:
+    default-property-inclusion: non_null
+
+app:
+  jwt:
+    secret: "Badoki-Super-Secret-Key-For-Dev-2026-xQ7wE9!@#$%^&*()_+Badoki"
+    # مدت اعتبار توکن: ۷ روز
+    expiration-ms: 604800000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+logging:
+  level:
+    org.springframework.security: WARN

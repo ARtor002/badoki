@@ -1,0 +1,29 @@
+# ===== اندروید (Gradle + Android Studio) =====
+
+# فایل‌های بیلد گریدل
+.gradle/
+build/
+app/build/
+captures/
+.cxx/
+.externalNativeBuild/
+
+# !!! مهم: local.properties را کامیت نکنید !!!
+# این فایل مسیر SDK را روی سیستم شما ذخیره می‌کند (sdk.dir=...)
+# روی سیستم هر کس باید خودش ساخته شود — اندروید استودیو خودکار می‌سازد.
+/local.properties
+
+# فایل‌های IDE
+.idea/
+*.iml
+.DS_Store
+
+# خروجی‌های پروژه
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# تست‌ها و گزارش‌ها
+/reports
+/test-results

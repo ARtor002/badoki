@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#5EEAD4</color>
+    <color name="onPrimary">#003730</color>
+    <color name="primaryContainer">#0E5E55</color>
+    <color name="onPrimaryContainer">#B2F5EA</color>
+    <color name="primaryDark">#4CD3BF</color>
+    <color name="secondary">#2DD4BF</color>
+    <color name="onSecondary">#003731</color>
+    <color name="secondaryContainer">#0F4A42</color>
+    <color name="onSecondaryContainer">#A7F3EB</color>
+    <color name="tertiary">#FBBF24</color>
+    <color name="onTertiary">#3A2B00</color>
+    <color name="tertiaryContainer">#4A3B05</color>
+    <color name="onTertiaryContainer">#FFE4A3</color>
+    <color name="error">#F87171</color>
+    <color name="onError">#450A0A</color>
+    <color name="errorContainer">#7F1D1D</color>
+    <color name="onErrorContainer">#FECACA</color>
+    <color name="background">#0F1514</color>
+    <color name="onBackground">#E2E8E7</color>
+    <color name="surface">#151D1C</color>
+    <color name="onSurface">#E2E8E7</color>
+    <color name="surfaceVariant">#1E2A28</color>
+    <color name="onSurfaceVariant">#A7B6B3</color>
+    <color name="outline">#4D5C59</color>
+    <color name="outlineVariant">#2A3735</color>
+    <color name="success">#4ADE80</color>
+    <color name="successContainer">#14532D</color>
+    <color name="warning">#FBBF24</color>
+    <color name="info">#60A5FA</color>
+    <color name="infoContainer">#1E3A5F</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="scrim">#B3000000</color>
+    <color name="ic_launcher_background">#0F766E</color>
+
+    <!-- رنگ آواتارها (شب) -->
+    <color name="avatar_1">#2DD4BF</color>
+    <color name="avatar_2">#60A5FA</color>
+    <color name="avatar_3">#A78BFA</color>
+    <color name="avatar_4">#F472B6</color>
+    <color name="avatar_5">#FB923C</color>
+    <color name="avatar_6">#34D399</color>
+    <color name="avatar_7">#818CF8</color>
+    <color name="avatar_8">#FBBF24</color>
+
+    <!-- اسلات‌ها -->
+    <color name="slotAvailable">#123430</color>
+    <color name="slotAvailableBorder">#2DD4BF</color>
+    <color name="slotUnavailable">#232D2B</color>
+    <color name="slotUnavailableText">#5C6B68</color>
+
+    <!-- استاتوس نوبت -->
+    <color name="statusConfirmedBg">#14532D</color>
+    <color name="statusConfirmedText">#86EFAC</color>
+    <color name="statusPendingBg">#4A3B05</color>
+    <color name="statusPendingText">#FDE68A</color>
+    <color name="statusCompletedBg">#1E3A5F</color>
+    <color name="statusCompletedText">#93C5FD</color>
+    <color name="statusCanceledBg">#7F1D1D</color>
+    <color name="statusCanceledText">#FCA5A5</color>
+</resources>
