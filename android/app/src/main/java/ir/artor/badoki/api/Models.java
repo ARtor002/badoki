@@ -212,4 +212,18 @@ public class Models {
         public long canceledCount;
         public Appointment nextAppointment;
     }
+    public static class Review implements Serializable {
+        public long id;
+        public long patientId;
+        public String patientName;
+        public int rating;
+        public String comment;
+        public String createdAt;
+    }
+
+    public static class ReviewRequest implements Serializable {
+        public long doctorId;
+        public int rating;
+        public String comment;
+    }
 }

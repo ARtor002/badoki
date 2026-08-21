@@ -68,6 +68,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Optional<Appointment> findFirstByDoctorIdAndStatusInAndDateGreaterThanEqualOrderByDateAscTimeAsc(
             Long doctorId, List<AppointmentStatus> statuses, LocalDate from);
 
+    @Query("""
+            select count(a) > 0 from Appointment a
+            where a.patient.id = :patientId
+              and a.doctor.id = :doctorId
+              and (a.status = :completed or (a.status = :confirmed and a.date < :today))
+            """)
+    boolean hasEligibleVisit(@Param("patientId") Long patientId,
+                             @Param("doctorId") Long doctorId,
+                             @Param("completed") AppointmentStatus completed,
+                             @Param("confirmed") AppointmentStatus confirmed,
+                             @Param("today") LocalDate today);
+
     boolean existsByDoctorIdAndDateAndTimeAndStatusNot(
             Long doctorId, LocalDate date, LocalTime time, AppointmentStatus excluded);
 

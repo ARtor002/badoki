@@ -5,20 +5,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ir.artor.badoki.BadokiApp;
 import ir.artor.badoki.MainActivity;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.ApiClient;
 import ir.artor.badoki.api.Models;
+import ir.artor.badoki.adapter.ReviewAdapter;
 import ir.artor.badoki.util.Avatar;
 import ir.artor.badoki.util.Fmt;
 import ir.artor.badoki.util.Jalali;
+import ir.artor.badoki.util.SessionManager;
+import ir.artor.badoki.util.StarRow;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -58,6 +65,12 @@ public class DoctorDetailFragment extends Fragment {
     private LocalDate selectedDate;
     private String selectedTime;
     private List<Models.Slot> slots;
+
+    // بخش امتیاز و نظر
+    private TextView reviewsAvg, reviewsCount, reviewsEmpty, reviewsAddBtn;
+    private LinearLayout reviewsAvgStars;
+    private RecyclerView reviewsRv;
+    private ReviewAdapter reviewsAdapter;
     private boolean busy;
 
     @Nullable
@@ -80,8 +93,21 @@ public class DoctorDetailFragment extends Fragment {
         slotsError = root.findViewById(R.id.slots_error);
         bookBtn = root.findViewById(R.id.book_btn);
         bookHint = root.findViewById(R.id.book_hint);
-
         bookBtn.setOnClickListener(v -> onBookClicked());
+
+        reviewsAvg = root.findViewById(R.id.reviews_avg);
+        reviewsAvgStars = root.findViewById(R.id.reviews_avg_stars);
+        reviewsCount = root.findViewById(R.id.reviews_count);
+        reviewsEmpty = root.findViewById(R.id.reviews_empty);
+        reviewsAddBtn = root.findViewById(R.id.reviews_add_btn);
+        reviewsRv = root.findViewById(R.id.reviews_rv);
+        reviewsRv.setLayoutManager(new LinearLayoutManager(requireContext()));
+        reviewsRv.setNestedScrollingEnabled(false);
+        reviewsAdapter = new ReviewAdapter(SessionManager.userId(), review ->
+                confirmDeleteReview(review));
+        reviewsRv.setAdapter(reviewsAdapter);
+
+        reviewsAddBtn.setOnClickListener(v -> openReviewSheet());
 
         loadDoctor();
         return root;
@@ -101,6 +127,7 @@ public class DoctorDetailFragment extends Fragment {
                     doctor = response.body();
                     renderDoctor(doctor);
                     buildDateChips(doctor);
+                    loadReviews();
                     contentView.setVisibility(View.VISIBLE);
                 } else {
                     errorView.setVisibility(View.VISIBLE);
@@ -140,6 +167,11 @@ public class DoctorDetailFragment extends Fragment {
         ((TextView) root.findViewById(R.id.address)).setText(d.address);
         ((TextView) root.findViewById(R.id.bio)).setText(d.bio);
         ((TextView) root.findViewById(R.id.price)).setText(Fmt.toman(d.visitPrice));
+
+        // بخش امتیاز و نظر
+        reviewsAvg.setText(Fmt.rating(d.rating));
+        StarRow.populateForRating(requireContext(), reviewsAvgStars, d.rating);
+        reviewsCount.setText("(" + Fmt.fa(d.reviewCount) + " " + getString(R.string.reviews) + ")");
 
         daysChips.removeAllViews();
         for (String day : d.availableDays) {
@@ -294,6 +326,64 @@ public class DoctorDetailFragment extends Fragment {
             bookHint.setText(R.string.select_slot_hint);
             bookHint.setVisibility(View.VISIBLE);
         }
+    }
+
+    // ---------- امتیاز و نظر ----------
+
+    private void loadReviews() {
+        BadokiApp.api().reviews(doctorId).enqueue(new Callback<List<Models.Review>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Models.Review>> call,
+                                   @NonNull Response<List<Models.Review>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    reviewsAdapter.submit(response.body());
+                    boolean empty = response.body().isEmpty();
+                    reviewsEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+                    reviewsRv.setVisibility(empty ? View.GONE : View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Models.Review>> call, @NonNull Throwable t) {
+                if (ApiClient.isUnauthorized(t)) {
+                    ApiClient.handleUnauthorized(requireContext());
+                }
+            }
+        });
+    }
+
+    private void openReviewSheet() {
+        ReviewSheet sheet = ReviewSheet.newInstance(doctorId);
+        sheet.setListener(() -> {
+            // بعد از ثبت نظر: امتیاز و نظرات را تازه کن
+            loadDoctor();
+            loadReviews();
+        });
+        sheet.show(getChildFragmentManager(), "review");
+    }
+
+    private void confirmDeleteReview(Models.Review review) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.reviews_delete_title)
+                .setMessage(R.string.reviews_delete_message)
+                .setPositiveButton(R.string.confirm, (d, w) -> {
+                    BadokiApp.api().deleteReview(review.id).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                            loadDoctor();
+                            loadReviews();
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                            if (ApiClient.isUnauthorized(t)) {
+                                ApiClient.handleUnauthorized(requireContext());
+                            }
+                        }
+                    });
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void onBookClicked() {

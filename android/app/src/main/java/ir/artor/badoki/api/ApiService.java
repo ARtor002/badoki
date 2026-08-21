@@ -127,4 +127,14 @@ public interface ApiService {
 
     @PUT("api/notifications/read-all")
     Call<Void> markAllNotificationsRead();
+
+    // ---------- امتیاز و نظر پزشکان ----------
+    @GET("api/doctors/{id}/reviews")
+    Call<List<Models.Review>> reviews(@Path("id") long doctorId);
+
+    @POST("api/reviews")
+    Call<Models.Review> createReview(@Body Models.ReviewRequest request);
+
+    @DELETE("api/reviews/{id}")
+    Call<Void> deleteReview(@Path("id") long id);
 }

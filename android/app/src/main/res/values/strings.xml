@@ -261,4 +261,16 @@
     <string name="loading_login">در حال ورود…</string>
     <string name="loading_sending_code">در حال ارسال کد بازیابی…</string>
 
+    <!--  امتیاز و نظر پزشکان  -->
+    <string name="reviews_title">امتیاز و نظر بیماران</string>
+    <string name="reviews_add">ثبت نظر</string>
+    <string name="reviews_add_title">ثبت نظر برای پزشک</string>
+    <string name="reviews_add_subtitle">تجربه خود را با انتخاب ستاره و نوشتن نظر به اشتراک بگذارید</string>
+    <string name="reviews_comment_hint">نظر شما (اختیاری)…</string>
+    <string name="reviews_submit">ثبت نظر</string>
+    <string name="reviews_empty">هنوز نظری ثبت نشده است</string>
+    <string name="reviews_error_rating">لطفاً امتیاز را انتخاب کنید</string>
+    <string name="reviews_delete">حذف</string>
+    <string name="reviews_delete_title">حذف نظر</string>
+    <string name="reviews_delete_message">نظر شما حذف خواهد شد. مطمئن هستید؟</string>
 </resources>

@@ -3,10 +3,12 @@ package ir.artor.badoki.config;
 import ir.artor.badoki.model.Appointment;
 import ir.artor.badoki.model.AppointmentStatus;
 import ir.artor.badoki.model.Doctor;
+import ir.artor.badoki.model.Review;
 import ir.artor.badoki.model.Role;
 import ir.artor.badoki.model.User;
 import ir.artor.badoki.repository.AppointmentRepository;
 import ir.artor.badoki.repository.DoctorRepository;
+import ir.artor.badoki.repository.ReviewRepository;
 import ir.artor.badoki.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +31,18 @@ public class DataSeeder implements CommandLineRunner {
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
+    private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataSeeder(UserRepository userRepository,
                       DoctorRepository doctorRepository,
                       AppointmentRepository appointmentRepository,
+                      ReviewRepository reviewRepository,
                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.appointmentRepository = appointmentRepository;
+        this.reviewRepository = reviewRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -179,8 +184,19 @@ public class DataSeeder implements CommandLineRunner {
         appointment(negar, doctors.get(5), today.plusDays(4), LocalTime.of(9, 30),
                 AppointmentStatus.PENDING, null);
 
-        log.info("داده‌های نمونه بارگذاری شد: {} کاربر، {} پزشک، {} نوبت",
-                userRepository.count(), doctorRepository.count(), appointmentRepository.count());
+        // ---------- نظرات و امتیازهای نمونه ----------
+        review(demo, doctors.get(0), 5, "بسیار دقیق و خوش‌برخورد بودند. توضیحات کامل درباره بیماری‌ام دادند و اصلاً عجله نداشتند.");
+        review(maryam, doctors.get(0), 4, "پزشک خوبی هستند، فقط انتظار در مطب کمی طولانی بود.");
+        review(reza, doctors.get(3), 5, "با کودک من فوق‌العاده صبور بودند. خیالم راحت شد.");
+        review(negar, doctors.get(5), 5, "مطمئن‌ترین انتخاب برای این حوزه. نتیجه عالی.");
+        review(demo, doctors.get(6), 4, "تشخیص دقیق و نسخه مناسب. هزینه ویزیت هم منصفانه است.");
+        review(maryam, doctors.get(1), 5, "نتیجه درمانم عالی بود. محیط مطب تمیز و مدرن است.");
+        review(reza, doctors.get(10), 4, "جراحی موفق و پیگیری‌های بعد از عمل منظم.");
+        review(negar, doctors.get(8), 3, "پزشک خوبی هستند اما وقت‌شناسی در مطب جای بهبود دارد.");
+
+        log.info("داده‌های نمونه بارگذاری شد: {} کاربر، {} پزشک، {} نوبت، {} نظر",
+                userRepository.count(), doctorRepository.count(),
+                appointmentRepository.count(), reviewRepository.count());
     }
 
     private User user(String name, String email, String phone, String password, Role role) {
@@ -224,5 +240,21 @@ public class DataSeeder implements CommandLineRunner {
         a.setStatus(status);
         a.setNotes(notes);
         appointmentRepository.save(a);
+    }
+
+    /** ثبت نظر نمونه و به‌روزرسانی تدریجی امتیاز پزشک */
+    private void review(User patient, Doctor doctor, int rating, String comment) {
+        Review r = new Review();
+        r.setPatient(patient);
+        r.setDoctor(doctor);
+        r.setRating(rating);
+        r.setComment(comment);
+        reviewRepository.save(r);
+
+        int newCount = doctor.getReviewCount() + 1;
+        double newRating = (doctor.getRating() * doctor.getReviewCount() + rating) / newCount;
+        doctor.setRating(Math.round(newRating * 10) / 10.0);
+        doctor.setReviewCount(newCount);
+        doctorRepository.save(doctor);
     }
 }
