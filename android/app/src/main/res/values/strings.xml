@@ -69,7 +69,8 @@
     <string name="filter_all">همه</string>
     <string name="doctors_empty_title">پزشکی پیدا نشد</string>
     <string name="doctors_empty_sub">فیلترها را تغییر دهید یا عبارت دیگری جستجو کنید</string>
-    <string name="doctor_visit_price">هزینه ویزیت: %1$s</string>
+    <string name="doctor_visit_price">هزینه ویزیت:</string>
+    <string name="doctor_visit_price_format">هزینه ویزیت: %s</string>
     <string name="available_days">روزهای ویزیت</string>
     <string name="choose_date">انتخاب تاریخ</string>
     <string name="choose_time">انتخاب ساعت</string>
