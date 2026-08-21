@@ -15,12 +15,12 @@ import java.util.Optional;
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     @Query("""
-            select d from Doctor d
-            where (:q is null or lower(d.fullName) like lower(concat('%', :q, '%')))
-              and (:specialty is null or d.specialty = :specialty)
-              and (:city is null or d.city = :city)
-            order by d.rating desc, d.id asc
-            """)
+        select d from Doctor d
+        where (:q is null or lower(d.fullName) like concat('%', lower(cast(:q as text)), '%'))
+          and (:specialty is null or d.specialty = cast(:specialty as text))
+          and (:city is null or d.city = cast(:city as text))
+        order by d.rating desc, d.id asc
+        """)
     Page<Doctor> search(@Param("q") String q,
                         @Param("specialty") String specialty,
                         @Param("city") String city,

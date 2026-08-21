@@ -28,7 +28,7 @@ public class ApiClient {
      *  - گوشی واقعی: آدرس LAN کامپیوتر (مثلاً http://192.168.1.5:8080/)
      *  یا با دستور adb reverse tcp:8080 tcp:8080 و آدرس http://localhost:8080/
      */
-    public static final String BASE_URL = "http://10.250.141.61:8080/";
+    public static final String BASE_URL = "http://10.238.239.61:8080/";
 
     public static ApiService create() {
         Interceptor authInterceptor = chain -> {

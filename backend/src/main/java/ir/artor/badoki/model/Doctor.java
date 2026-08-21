@@ -20,13 +20,13 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 120)
+    @Column(nullable = false, length = 120, columnDefinition = "VARCHAR(120)")
     private String fullName;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 80, columnDefinition = "VARCHAR(80)")
     private String specialty;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 60, columnDefinition = "VARCHAR(60)")
     private String city;
 
     @Column(length = 120)
