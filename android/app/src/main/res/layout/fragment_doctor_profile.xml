@@ -143,6 +143,17 @@
                 android:layout_marginTop="14dp"
                 android:text="@string/doctor_profile_edit"
                 app:cornerRadius="14dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/nav_logout"
+                android:textColor="@color/error"
+                app:cornerRadius="14dp"
+                app:strokeColor="@color/error" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

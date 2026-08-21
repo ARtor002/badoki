@@ -20,6 +20,7 @@ import ir.artor.badoki.BadokiApp;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.ApiClient;
 import ir.artor.badoki.api.Models;
+import ir.artor.badoki.util.LoadingDialog;
 import ir.artor.badoki.util.SessionManager;
 
 import retrofit2.Call;
@@ -68,6 +69,7 @@ public class OtpFragment extends Fragment {
     }
 
     private String mode, email, devOtp;
+    private final LoadingDialog loadingDialog = new LoadingDialog();
     private TextInputEditText codeField;
     private Button verifyBtn;
     private TextView errorText, hintText, resendBtn;
@@ -157,6 +159,7 @@ public class OtpFragment extends Fragment {
 
     private void resend() {
         resendBtn.setEnabled(false);
+        loadingDialog.show(requireContext(), getString(R.string.loading_sending_otp));
         // فقط حالت REGISTER امکان ارسال مجدد دارد؛ در LOGIN باید دوباره لاگین کرد
         if (!MODE_REGISTER.equals(mode)) {
             resendBtn.setEnabled(true);
@@ -171,6 +174,7 @@ public class OtpFragment extends Fragment {
             public void onResponse(@NonNull Call<Models.OtpResponse> c,
                                    @NonNull Response<Models.OtpResponse> response) {
                 resendBtn.setEnabled(true);
+                loadingDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().devOtp != null && !response.body().devOtp.isEmpty()) {
                         hintText.setText(getString(R.string.otp_dev_hint) + " " + response.body().devOtp);
@@ -187,6 +191,7 @@ public class OtpFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<Models.OtpResponse> c, @NonNull Throwable t) {
                 resendBtn.setEnabled(true);
+                loadingDialog.dismiss();
                 errorText.setText(ApiClient.errorMessage(t));
                 errorText.setVisibility(View.VISIBLE);
             }

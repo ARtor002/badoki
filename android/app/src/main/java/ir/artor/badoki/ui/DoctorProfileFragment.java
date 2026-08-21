@@ -1,6 +1,7 @@
 package ir.artor.badoki.ui;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,14 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
+import ir.artor.badoki.AuthActivity;
 import ir.artor.badoki.BadokiApp;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.ApiClient;
 import ir.artor.badoki.api.Models;
 import ir.artor.badoki.util.Avatar;
 import ir.artor.badoki.util.Fmt;
+import ir.artor.badoki.util.SessionManager;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -62,9 +65,25 @@ public class DoctorProfileFragment extends Fragment {
         hours = root.findViewById(R.id.hours);
 
         root.findViewById(R.id.btn_edit).setOnClickListener(v -> showEditDialog());
+        root.findViewById(R.id.btn_logout).setOnClickListener(v -> confirmLogout());
 
         load();
         return root;
+    }
+
+    /** خروج از حساب با دیالوگ تأیید */
+    private void confirmLogout() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.logout_confirm_title)
+                .setMessage(R.string.logout_confirm_message)
+                .setPositiveButton(R.string.confirm, (d, w) -> {
+                    SessionManager.logout();
+                    Intent intent = new Intent(requireContext(), AuthActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void load() {

@@ -19,6 +19,7 @@ import ir.artor.badoki.BadokiApp;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.ApiClient;
 import ir.artor.badoki.api.Models;
+import ir.artor.badoki.util.LoadingDialog;
 import ir.artor.badoki.util.SessionManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -35,6 +36,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText passwordField;
     private TextView errorText;
     private Button loginBtn;
+    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     @Nullable
     @Override
@@ -92,6 +94,7 @@ public class LoginFragment extends Fragment {
         if (!valid) return;
 
         setLoading(true);
+        loadingDialog.show(requireContext(), getString(R.string.loading_login));
         Models.LoginRequest request = new Models.LoginRequest();
         request.email = email;
         request.password = password;
@@ -101,6 +104,7 @@ public class LoginFragment extends Fragment {
             public void onResponse(@NonNull Call<Models.AuthResponse> call,
                                    @NonNull Response<Models.AuthResponse> response) {
                 setLoading(false);
+                loadingDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     Models.AuthResponse body = response.body();
                     if (body.requiresOtp) {
@@ -120,6 +124,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<Models.AuthResponse> call, @NonNull Throwable t) {
                 setLoading(false);
+                loadingDialog.dismiss();
                 showError(ApiClient.errorMessage(t));
             }
         });

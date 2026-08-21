@@ -19,6 +19,7 @@ import ir.artor.badoki.BadokiApp;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.ApiClient;
 import ir.artor.badoki.api.Models;
+import ir.artor.badoki.util.LoadingDialog;
 import ir.artor.badoki.util.SessionManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,6 +38,7 @@ public class RegisterFragment extends Fragment {
     private TextInputEditText nameField, emailField, phoneField, passField, pass2Field;
     private TextView errorText;
     private Button registerBtn;
+    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     @Nullable
     @Override
@@ -106,6 +108,7 @@ public class RegisterFragment extends Fragment {
 
         setLoading(true);
         // گام ۱: ارسال کد تأیید به ایمیل
+        loadingDialog.show(requireContext(), getString(R.string.loading_sending_otp));
         Models.EmailRequest req = new Models.EmailRequest();
         req.email = email;
         BadokiApp.api().sendRegisterOtp(req).enqueue(new Callback<Models.OtpResponse>() {
@@ -113,6 +116,7 @@ public class RegisterFragment extends Fragment {
             public void onResponse(@NonNull Call<Models.OtpResponse> call,
                                    @NonNull Response<Models.OtpResponse> response) {
                 setLoading(false);
+                loadingDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     // گام ۲: صفحه کد تأیید
                     ((AuthActivity) requireActivity()).openOtp(
@@ -127,6 +131,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<Models.OtpResponse> call, @NonNull Throwable t) {
                 setLoading(false);
+                loadingDialog.dismiss();
                 showError(ApiClient.errorMessage(t));
             }
         });

@@ -256,4 +256,9 @@
     <string name="notif_completed_title">انجام نوبت</string>
     <string name="notif_expired_title">انقضای نوبت</string>
 
+    <!-- لودینگ ارسال ایمیل -->
+    <string name="loading_sending_otp">در حال ارسال کد تأیید…</string>
+    <string name="loading_login">در حال ورود…</string>
+    <string name="loading_sending_code">در حال ارسال کد بازیابی…</string>
+
 </resources>

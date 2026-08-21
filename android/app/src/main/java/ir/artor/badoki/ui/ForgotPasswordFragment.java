@@ -18,6 +18,7 @@ import ir.artor.badoki.BadokiApp;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.ApiClient;
 import ir.artor.badoki.api.Models;
+import ir.artor.badoki.util.LoadingDialog;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +30,7 @@ public class ForgotPasswordFragment extends Fragment {
     private TextInputEditText emailField, codeField, passwordField;
     private Button sendBtn, resetBtn;
     private TextView errorText, hintText, stepHint;
+    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     @Nullable
     @Override
@@ -57,6 +59,7 @@ public class ForgotPasswordFragment extends Fragment {
             }
             sendBtn.setEnabled(false);
             sendBtn.setText(R.string.loading);
+            loadingDialog.show(requireContext(), getString(R.string.loading_sending_code));
             Models.ForgotPasswordRequest req = new Models.ForgotPasswordRequest();
             req.email = email;
             BadokiApp.api().forgotPassword(req).enqueue(new Callback<Models.OtpResponse>() {
@@ -65,6 +68,7 @@ public class ForgotPasswordFragment extends Fragment {
                                        @NonNull Response<Models.OtpResponse> response) {
                     sendBtn.setEnabled(true);
                     sendBtn.setText(R.string.forgot_send);
+                    loadingDialog.dismiss();
                     if (response.isSuccessful() && response.body() != null) {
                         codeField.setVisibility(View.VISIBLE);
                         passwordField.setVisibility(View.VISIBLE);
@@ -85,6 +89,7 @@ public class ForgotPasswordFragment extends Fragment {
                 public void onFailure(@NonNull Call<Models.OtpResponse> c, @NonNull Throwable t) {
                     sendBtn.setEnabled(true);
                     sendBtn.setText(R.string.forgot_send);
+                    loadingDialog.dismiss();
                     errorText.setText(ApiClient.errorMessage(t));
                     errorText.setVisibility(View.VISIBLE);
                 }
