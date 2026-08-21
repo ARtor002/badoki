@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import ir.artor.badoki.ui.ForgotPasswordFragment;
 import ir.artor.badoki.ui.LoginFragment;
 import ir.artor.badoki.ui.RegisterFragment;
 import ir.artor.badoki.util.SessionManager;
@@ -35,6 +36,19 @@ public class AuthActivity extends AppCompatActivity {
     public void showRegister() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.auth_container, new RegisterFragment())
+                .commit();
+    }
+
+    /** باز کردن صفحه کد تأیید (ثبت‌نام یا ورود) */
+    public void openOtp(androidx.fragment.app.Fragment otpFragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_container, otpFragment)
+                .commit();
+    }
+
+    public void showForgotPassword() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_container, new ForgotPasswordFragment())
                 .commit();
     }
 

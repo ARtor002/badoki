@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,9 +13,19 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.navigation.NavigationView;
 
+import ir.artor.badoki.api.ApiClient;
+import ir.artor.badoki.api.Models;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import ir.artor.badoki.ui.AdminDashboardFragment;
+import ir.artor.badoki.ui.EducationFragment;
+import ir.artor.badoki.ui.NotificationsFragment;
 import ir.artor.badoki.ui.AdminDoctorsFragment;
 import ir.artor.badoki.ui.AdminUsersFragment;
 import ir.artor.badoki.ui.AppointmentsFragment;
@@ -36,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navView;
     private Toolbar toolbar;
+    private BadgeDrawable notifBadge;
+    private final android.os.Handler badgePoller = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable badgeTask = new Runnable() {
+        @Override
+        public void run() {
+            refreshUnreadBadge();
+            badgePoller.postDelayed(this, 30_000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
                 open(new AdminDoctorsFragment(), getString(R.string.nav_admin_doctors), false);
             } else if (id == R.id.nav_admin_users) {
                 open(new AdminUsersFragment(), getString(R.string.nav_admin_users), false);
+            } else if (id == R.id.nav_notifications) {
+                open(new NotificationsFragment(), getString(R.string.nav_notifications), false);
+            } else if (id == R.id.nav_education) {
+                open(new EducationFragment(), getString(R.string.nav_education), false);
             } else if (id == R.id.nav_profile) {
                 openProfile();
             }
@@ -89,6 +113,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateDrawerHeader();
+        if (SessionManager.isLoggedIn()) {
+            refreshUnreadBadge();
+            badgePoller.removeCallbacks(badgeTask);
+            badgePoller.postDelayed(badgeTask, 30_000);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        badgePoller.removeCallbacks(badgeTask);
     }
 
     /** نمایش آیتم‌های منو بر اساس نقش */
@@ -102,6 +137,45 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.nav_doctor_appointments).setVisible(doctor);
         menu.findItem(R.id.nav_admin_doctors).setVisible(admin);
         menu.findItem(R.id.nav_admin_users).setVisible(admin);
+        // اطلاع‌رسانی و آموزش برای همه نقش‌ها
+        menu.findItem(R.id.nav_notifications).setVisible(true);
+        menu.findItem(R.id.nav_education).setVisible(true);
+
+        // نشانگر (Badge) اعلان‌های ناخوانده — بعد از رندر آیتم منو متصل می‌شود
+        navView.post(() -> {
+            View itemView = navView.findViewById(R.id.nav_notifications);
+            if (itemView != null) {
+                notifBadge = BadgeDrawable.create(MainActivity.this);
+                notifBadge.setBadgeTextColor(getColor(R.color.white));
+                notifBadge.setBackgroundColor(getColor(R.color.error));
+                notifBadge.setMaxCharacterCount(3);
+                notifBadge.setVisible(false);
+                BadgeUtils.attachBadgeDrawable(notifBadge, itemView);
+            }
+        });
+    }
+
+    /** دریافت و نمایش تعداد اعلان‌های ناخوانده */
+    public void refreshUnreadBadge() {
+        if (notifBadge == null || !SessionManager.isLoggedIn()) return;
+        BadokiApp.api().unreadCount().enqueue(new Callback<Models.UnreadCount>() {
+            @Override
+            public void onResponse(@NonNull Call<Models.UnreadCount> call,
+                                   @NonNull Response<Models.UnreadCount> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    long count = response.body().count;
+                    notifBadge.setVisible(count > 0);
+                    notifBadge.setNumber((int) count);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Models.UnreadCount> call, @NonNull Throwable t) {
+                if (ApiClient.isUnauthorized(t)) {
+                    ApiClient.handleUnauthorized(MainActivity.this);
+                }
+            }
+        });
     }
 
     /** صفحه داشبورد متناسب با نقش */

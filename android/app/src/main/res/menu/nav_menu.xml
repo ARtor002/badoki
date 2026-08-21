@@ -30,6 +30,14 @@
             android:title="@string/nav_admin_users" />
         <!-- مشترک -->
         <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_bell"
+            android:title="@string/nav_notifications" />
+        <item
+            android:id="@+id/nav_education"
+            android:icon="@drawable/ic_book"
+            android:title="@string/nav_education" />
+        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_person"
             android:title="@string/nav_profile" />

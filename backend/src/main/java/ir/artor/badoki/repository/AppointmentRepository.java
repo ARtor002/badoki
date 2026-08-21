@@ -6,14 +6,12 @@ import ir.artor.badoki.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     List<Appointment> findByPatientIdOrderByDateDescTimeDesc(Long patientId);
@@ -57,6 +55,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     long countByDoctorIdAndStatus(Long doctorId, AppointmentStatus status);
 
     long countByStatus(AppointmentStatus status);
+
+    /** نوبت‌های گذشته که هنوز بسته نشده‌اند (برای انقضای خودکار) */
+    List<Appointment> findByStatusInAndDateBefore(List<AppointmentStatus> statuses, LocalDate date);
+
+    List<Appointment> findByPatientIdAndStatusInAndDateBefore(
+            Long patientId, List<AppointmentStatus> statuses, LocalDate date);
+
+    List<Appointment> findByDoctorIdAndStatusInAndDateBefore(
+            Long doctorId, List<AppointmentStatus> statuses, LocalDate date);
 
     Optional<Appointment> findFirstByDoctorIdAndStatusInAndDateGreaterThanEqualOrderByDateAscTimeAsc(
             Long doctorId, List<AppointmentStatus> statuses, LocalDate from);

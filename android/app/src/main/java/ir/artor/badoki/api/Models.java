@@ -17,6 +17,55 @@ public class Models {
     public static class AuthResponse implements Serializable {
         public String token;
         public User user;
+        public boolean requiresOtp;
+        public String email;
+        public String message;
+        public String devOtp;
+    }
+
+    public static class OtpResponse implements Serializable {
+        public String message;
+        public String devOtp;
+    }
+
+    public static class EmailRequest implements Serializable {
+        public String email;
+    }
+
+    public static class VerifyRegisterRequest implements Serializable {
+        public String email;
+        public String otp;
+        public String fullName;
+        public String phone;
+        public String password;
+    }
+
+    public static class VerifyLoginRequest implements Serializable {
+        public String email;
+        public String otp;
+    }
+
+    public static class ForgotPasswordRequest implements Serializable {
+        public String email;
+    }
+
+    public static class ResetPasswordRequest implements Serializable {
+        public String email;
+        public String otp;
+        public String newPassword;
+    }
+
+    public static class Notification implements Serializable {
+        public long id;
+        public String title;
+        public String message;
+        public String type;
+        public boolean read;
+        public String createdAt;
+    }
+
+    public static class UnreadCount implements Serializable {
+        public long count;
     }
 
     public static class RegisterRequest implements Serializable {

@@ -225,4 +225,35 @@
     <string name="admin_users_empty">کاربری یافت نشد</string>
     <string name="admin_doctors_empty">هنوز پزشکی ثبت نشده. اولین پزشک را اضافه کنید</string>
     <string name="appointments_doctor_empty">نوبتی برای شما ثبت نشده</string>
+    <!-- OTP و فراموشی رمز -->
+    <string name="otp_title">تأیید کد</string>
+    <string name="otp_sent_to">کد تأیید به این ایمیل ارسال شد:</string>
+    <string name="otp_code_hint">کد ۶ رقمی</string>
+    <string name="otp_verify">تأیید کد</string>
+    <string name="otp_resend">ارسال دوباره کد</string>
+    <string name="otp_invalid">کد تأیید باید ۶ رقم باشد</string>
+    <string name="otp_dev_hint">(حالت آزمایشی) کد شما:</string>
+    <string name="otp_resent">کد جدید ارسال شد</string>
+    <string name="otp_login_resend">برای دریافت کد جدید، دوباره وارد شوید</string>
+    <string name="forgot_title">فراموشی رمز عبور</string>
+    <string name="forgot_subtitle">ایمیل خود را وارد کنید؛ کد بازیابی برایتان ارسال می‌شود</string>
+    <string name="forgot_send">ارسال کد بازیابی</string>
+    <string name="forgot_step2">کد را وارد کنید و رمز جدید بسازید:</string>
+    <string name="forgot_new_password">رمز عبور جدید</string>
+    <string name="forgot_reset">بازیابی رمز عبور</string>
+    <string name="forgot_success_title">رمز عبور تغییر کرد</string>
+    <string name="forgot_success_msg">رمز عبور شما با موفقیت بازنشانی شد. حالا می‌توانید وارد شوید.</string>
+    <string name="login_forgot">رمز عبور را فراموش کرده‌اید؟</string>
+
+    <!-- اطلاع‌رسانی -->
+    <string name="nav_notifications">اطلاع‌رسانی</string>
+    <string name="nav_education">آموزش</string>
+    <string name="notifications_empty_title">اعلانی ندارید</string>
+    <string name="notifications_empty_sub">وقتی پزشک نوبت شما را تأیید یا لغو کند، اینجا اعلان می‌گیرید</string>
+    <string name="notifications_read_all">خواندن همه</string>
+    <string name="notif_canceled_title">لغو نوبت</string>
+    <string name="notif_confirmed_title">تأیید نوبت</string>
+    <string name="notif_completed_title">انجام نوبت</string>
+    <string name="notif_expired_title">انقضای نوبت</string>
+
 </resources>

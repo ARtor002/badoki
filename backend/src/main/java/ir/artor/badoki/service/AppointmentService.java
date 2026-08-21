@@ -24,15 +24,20 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final DoctorService doctorService;
+    private final NotificationService notificationService;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, DoctorService doctorService) {
+    public AppointmentService(AppointmentRepository appointmentRepository,
+                              DoctorService doctorService,
+                              NotificationService notificationService) {
         this.appointmentRepository = appointmentRepository;
         this.doctorService = doctorService;
+        this.notificationService = notificationService;
     }
 
     /** فیلتر: all | upcoming | past | canceled */
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AppointmentResponse> listForUser(User user, String filter) {
+        expireForUser(user.getId());
         List<Appointment> list;
         if (filter == null || filter.isBlank() || filter.equals("all")) {
             list = appointmentRepository.findByPatientIdOrderByDateDescTimeDesc(user.getId());
@@ -105,6 +110,12 @@ public class AppointmentService {
         }
         a.setStatus(AppointmentStatus.CANCELED);
         appointmentRepository.save(a);
+
+        // اطلاع‌رسانی به پزشک
+        notificationService.notifyUser(a.getDoctor().getUserId(), "لغو نوبت توسط بیمار",
+                "بیمار «" + user.getFullName() + "» نوبت " + a.getDate() + " ساعت " + a.getTime()
+                        + " را لغو کرد.",
+                "APPOINTMENT_CANCELED");
         return AppointmentResponse.from(a);
     }
 
@@ -137,8 +148,9 @@ public class AppointmentService {
     // ---------- سمت پزشک (نقش DOCTOR) ----------
 
     /** فیلتر: all | upcoming | past */
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AppointmentResponse> listForDoctor(Doctor doctor, String filter) {
+        expireForDoctor(doctor.getId());
         List<Appointment> list;
         if (filter == null || filter.isBlank() || filter.equals("all")) {
             list = appointmentRepository.findByDoctorIdOrderByDateDescTimeDesc(doctor.getId());
@@ -185,6 +197,20 @@ public class AppointmentService {
         }
         a.setStatus(target);
         appointmentRepository.save(a);
+
+        // اطلاع‌رسانی به بیمار
+        Long doctorUserId = a.getDoctor().getUserId();
+        if (target == AppointmentStatus.CANCELED) {
+            notificationService.notifyUser(a.getPatient().getId(), "لغو نوبت توسط پزشک",
+                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                            + " ساعت " + a.getTime() + " توسط پزشک لغو شد.",
+                    "APPOINTMENT_CANCELED");
+        } else if (target == AppointmentStatus.CONFIRMED) {
+            notificationService.notifyUser(a.getPatient().getId(), "تأیید نوبت",
+                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                            + " ساعت " + a.getTime() + " توسط پزشک تأیید شد.",
+                    "APPOINTMENT_CONFIRMED");
+        }
         return AppointmentResponse.from(a);
     }
 
@@ -205,6 +231,52 @@ public class AppointmentService {
                         doctor.getId(), active, today)
                 .ifPresent(a -> d.setNextAppointment(AppointmentResponse.from(a)));
         return d;
+    }
+
+    // ---------- انقضای خودکار نوبت‌ها ----------
+
+    /**
+     * جمع‌بندی نوبت‌های گذشته (توسط اسکجولر شبانه و هنگام نمایش لیست‌ها):
+     * - PENDING که تاریخش گذشته → CANCELED (منقضی، چون تأیید نشده)
+     * - CONFIRMED که تاریخش گذشته → COMPLETED (انجام‌شده)
+     */
+    @Transactional
+    public int processExpired() {
+        List<Appointment> expired = appointmentRepository.findByStatusInAndDateBefore(
+                List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED), LocalDate.now());
+        expireList(expired);
+        return expired.size();
+    }
+
+    @Transactional
+    void expireForUser(Long userId) {
+        expireList(appointmentRepository.findByPatientIdAndStatusInAndDateBefore(
+                userId, List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED), LocalDate.now()));
+    }
+
+    @Transactional
+    void expireForDoctor(Long doctorId) {
+        expireList(appointmentRepository.findByDoctorIdAndStatusInAndDateBefore(
+                doctorId, List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED), LocalDate.now()));
+    }
+
+    private void expireList(List<Appointment> list) {
+        for (Appointment a : list) {
+            if (a.getStatus() == AppointmentStatus.PENDING) {
+                a.setStatus(AppointmentStatus.CANCELED);
+                notificationService.notifyUser(a.getPatient().getId(), "انقضای نوبت",
+                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                                + " به دلیل عدم تأیید توسط پزشک منقضی شد.",
+                        "APPOINTMENT_EXPIRED");
+            } else if (a.getStatus() == AppointmentStatus.CONFIRMED) {
+                a.setStatus(AppointmentStatus.COMPLETED);
+                notificationService.notifyUser(a.getPatient().getId(), "پایان نوبت",
+                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                                + " به پایان رسید.",
+                        "APPOINTMENT_COMPLETED");
+            }
+        }
+        appointmentRepository.saveAll(list);
     }
 
     // ---------- ابزارها ----------

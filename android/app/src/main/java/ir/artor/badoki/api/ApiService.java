@@ -18,8 +18,20 @@ public interface ApiService {
     @POST("api/auth/login")
     Call<Models.AuthResponse> login(@Body Models.LoginRequest request);
 
-    @POST("api/auth/register")
-    Call<Models.AuthResponse> register(@Body Models.RegisterRequest request);
+    @POST("api/auth/verify-login")
+    Call<Models.AuthResponse> verifyLogin(@Body Models.VerifyLoginRequest request);
+
+    @POST("api/auth/send-register-otp")
+    Call<Models.OtpResponse> sendRegisterOtp(@Body Models.EmailRequest request);
+
+    @POST("api/auth/verify-register")
+    Call<Models.AuthResponse> verifyRegister(@Body Models.VerifyRegisterRequest request);
+
+    @POST("api/auth/forgot-password")
+    Call<Models.OtpResponse> forgotPassword(@Body Models.ForgotPasswordRequest request);
+
+    @POST("api/auth/reset-password")
+    Call<Void> resetPassword(@Body Models.ResetPasswordRequest request);
 
     // ---------- پروفایل ----------
     @GET("api/me")
@@ -102,4 +114,17 @@ public interface ApiService {
 
     @DELETE("api/admin/doctors/{id}")
     Call<Void> adminDeleteDoctor(@Path("id") long id);
+
+    // ---------- اطلاع‌رسانی ----------
+    @GET("api/notifications")
+    Call<List<Models.Notification>> notifications();
+
+    @GET("api/notifications/unread-count")
+    Call<Models.UnreadCount> unreadCount();
+
+    @PUT("api/notifications/{id}/read")
+    Call<Void> markNotificationRead(@Path("id") long id);
+
+    @PUT("api/notifications/read-all")
+    Call<Void> markAllNotificationsRead();
 }

@@ -105,20 +105,19 @@ public class RegisterFragment extends Fragment {
         if (!valid) return;
 
         setLoading(true);
-        Models.RegisterRequest request = new Models.RegisterRequest();
-        request.fullName = name;
-        request.email = email;
-        request.phone = phone;
-        request.password = pass;
-
-        BadokiApp.api().register(request).enqueue(new Callback<Models.AuthResponse>() {
+        // گام ۱: ارسال کد تأیید به ایمیل
+        Models.EmailRequest req = new Models.EmailRequest();
+        req.email = email;
+        BadokiApp.api().sendRegisterOtp(req).enqueue(new Callback<Models.OtpResponse>() {
             @Override
-            public void onResponse(@NonNull Call<Models.AuthResponse> call,
-                                   @NonNull Response<Models.AuthResponse> response) {
+            public void onResponse(@NonNull Call<Models.OtpResponse> call,
+                                   @NonNull Response<Models.OtpResponse> response) {
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    SessionManager.saveLogin(response.body());
-                    ((AuthActivity) requireActivity()).openMain();
+                    // گام ۲: صفحه کد تأیید
+                    ((AuthActivity) requireActivity()).openOtp(
+                            OtpFragment.forRegister(email, response.body().devOtp,
+                                    name, phone, pass));
                 } else {
                     showError(ApiClient.errorMessage(
                             new retrofit2.HttpException(response)));
@@ -126,7 +125,7 @@ public class RegisterFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<Models.AuthResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Models.OtpResponse> call, @NonNull Throwable t) {
                 setLoading(false);
                 showError(ApiClient.errorMessage(t));
             }

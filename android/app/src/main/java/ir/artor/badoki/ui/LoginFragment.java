@@ -51,6 +51,8 @@ public class LoginFragment extends Fragment {
 
         root.findViewById(R.id.login_go_register).setOnClickListener(v ->
                 ((AuthActivity) requireActivity()).showRegister());
+        root.findViewById(R.id.login_forgot).setOnClickListener(v ->
+                ((AuthActivity) requireActivity()).showForgotPassword());
 
         // پاک کردن خطا هنگام تایپ
         TextWatcher clearError = new TextWatcher() {
@@ -100,8 +102,15 @@ public class LoginFragment extends Fragment {
                                    @NonNull Response<Models.AuthResponse> response) {
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    SessionManager.saveLogin(response.body());
-                    ((AuthActivity) requireActivity()).openMain();
+                    Models.AuthResponse body = response.body();
+                    if (body.requiresOtp) {
+                        // مرحله دوم: کد تأیید
+                        ((AuthActivity) requireActivity()).openOtp(
+                                OtpFragment.forLogin(body.email, body.devOtp));
+                    } else {
+                        SessionManager.saveLogin(body);
+                        ((AuthActivity) requireActivity()).openMain();
+                    }
                 } else {
                     showError(ApiClient.errorMessage(
                             new retrofit2.HttpException(response)));

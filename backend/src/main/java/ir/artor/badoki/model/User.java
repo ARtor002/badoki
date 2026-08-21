@@ -31,6 +31,9 @@ public class User {
     private Role role = Role.PATIENT;
 
     @Column(nullable = false)
+    private boolean twoFactorEnabled = true;
+
+    @Column(nullable = false)
     private Instant createdAt;
 
     @PrePersist
@@ -86,11 +89,22 @@ public class User {
         this.role = role;
     }
 
+    public boolean isTwoFactorEnabled() {
+        return twoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        this.twoFactorEnabled = twoFactorEnabled;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public User() {
     }
 }

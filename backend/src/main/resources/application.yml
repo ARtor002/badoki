@@ -18,11 +18,30 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_USER:artor906@gmail.com}
+    password: ${GMAIL_APP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 app:
   jwt:
     secret: "Badoki-Super-Secret-Key-For-Dev-2026-xQ7wE9!@#$%^&*()_+Badoki"
     # مدت اعتبار توکن: ۷ روز
     expiration-ms: 604800000
+  otp:
+    expiry-minutes: 5
+    resend-cooldown-seconds: 60
+    # اگر true باشد (یا ایمیل تنظیم نشده باشد)، کد در پاسخ API و لاگ برگردانده می‌شود — فقط برای توسعه
+    dev-mode: ${OTP_DEV_MODE:true}
+  scheduler:
+    expire-cron: "0 15 0 * * *"
 
 springdoc:
   swagger-ui:
