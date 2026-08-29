@@ -63,10 +63,13 @@
 
     <!-- پزشکان -->
     <string name="doctors_title">پزشکان</string>
-    <string name="search_placeholder">جستجوی نام پزشک…</string>
+    <string name="search_placeholder">نام، تخصص، شهر یا بیمارستان…</string>
     <string name="filter_specialty">تخصص</string>
     <string name="filter_city">شهر</string>
+    <string name="filter_hospital">بیمارستان / کلینیک</string>
     <string name="filter_all">همه</string>
+    <string name="doctors_result_count">%1$s پزشک</string>
+    <string name="doctors_clear_filters">پاک کردن فیلترها</string>
     <string name="doctors_empty_title">پزشکی پیدا نشد</string>
     <string name="doctors_empty_sub">فیلترها را تغییر دهید یا عبارت دیگری جستجو کنید</string>
     <string name="doctor_visit_price">هزینه ویزیت:</string>

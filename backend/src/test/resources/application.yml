@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:badoki-test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  mail:
+    host: localhost
+    port: 25
+    username: test
+    password: test
+
+app:
+  jwt:
+    secret: "Badoki-Test-Secret-Key-For-Unit-Tests-2026-xxxxxxxxxxxx"
+    expiration-ms: 3600000
+  otp:
+    expiry-minutes: 5
+    resend-cooldown-seconds: 60
+    dev-mode: true
+  scheduler:
+    expire-cron: "-"

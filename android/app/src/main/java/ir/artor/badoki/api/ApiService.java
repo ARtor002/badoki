@@ -48,6 +48,7 @@ public interface ApiService {
     Call<Models.DoctorsPage> doctors(@Query("query") String query,
                                      @Query("specialty") String specialty,
                                      @Query("city") String city,
+                                     @Query("hospital") String hospital,
                                      @Query("page") int page,
                                      @Query("size") int size);
 
@@ -62,6 +63,9 @@ public interface ApiService {
 
     @GET("api/meta/cities")
     Call<List<String>> cities();
+
+    @GET("api/meta/hospitals")
+    Call<List<String>> hospitals();
 
     // ---------- نوبت‌ها ----------
     @GET("api/appointments")

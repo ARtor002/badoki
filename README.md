@@ -92,9 +92,9 @@ APK آماده: **`Badoki-debug.apk`**
 | متد | مسیر | توضیح |
 |---|---|---|
 | POST | `/api/auth/register` ، `/api/auth/login` | ثبت‌نام / ورود |
-| GET | `/api/doctors?query=&specialty=&city=` | لیست/جستجوی پزشکان |
+| GET | `/api/doctors?query=&specialty=&city=&hospital=` | لیست/جستجوی پزشکان (فیلترها با AND ترکیب می‌شوند؛ query روی نام، تخصص، شهر و بیمارستان) |
 | GET | `/api/doctors/{id}` ، `/api/doctors/{id}/slots?date=` | جزئیات و اسلات‌های خالی |
-| GET | `/api/meta/specialties` ، `/api/meta/cities` | فیلترها |
+| GET | `/api/meta/specialties` ، `/api/meta/cities` ، `/api/meta/hospitals` | فیلترهای صفحه جستجو |
 
 ### بیمار
 | متد | مسیر | توضیح |

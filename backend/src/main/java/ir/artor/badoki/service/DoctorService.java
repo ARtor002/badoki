@@ -44,10 +44,14 @@ public class DoctorService {
     }
 
     public PagedResponse<DoctorResponse> search(String query, String specialty, String city,
-                                                int page, int size) {
+                                                String hospital, int page, int size) {
         Pageable pageable = PageRequest.of(Math.max(page, 0), Math.min(Math.max(size, 1), 50));
         Page<Doctor> result = doctorRepository.search(
-                blankToNull(query), blankToNull(specialty), blankToNull(city), pageable);
+                blankToNull(query),
+                blankToNull(specialty),
+                blankToNull(city),
+                blankToNull(hospital),
+                pageable);
         return PagedResponse.of(result,
                 result.getContent().stream().map(DoctorResponse::from).toList());
     }
@@ -62,6 +66,10 @@ public class DoctorService {
 
     public List<String> cities() {
         return doctorRepository.findDistinctCities();
+    }
+
+    public List<String> hospitals() {
+        return doctorRepository.findDistinctHospitals();
     }
 
     public long count() {

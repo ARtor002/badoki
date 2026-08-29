@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="16dp">
 
     <EditText
         android:id="@+id/search_field"
@@ -14,6 +16,7 @@
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="10dp"
         android:hint="@string/search_placeholder"
+        android:imeOptions="actionSearch"
         android:importantForAutofill="no"
         android:inputType="text"
         android:maxLines="1"
@@ -23,35 +26,103 @@
         android:textColorHint="@color/onSurfaceVariant"
         android:textSize="14sp" />
 
+    <TextView
+        style="@style/FilterRowLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_specialty" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:scrollbars="none">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/specialty_chips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="32dp"
             app:chipSpacingHorizontal="6dp"
+            app:selectionRequired="true"
             app:singleLine="true"
             app:singleSelection="true" />
     </HorizontalScrollView>
 
+    <TextView
+        style="@style/FilterRowLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_city" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="4dp"
         android:scrollbars="none">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/city_chips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="32dp"
             app:chipSpacingHorizontal="6dp"
+            app:selectionRequired="true"
             app:singleLine="true"
             app:singleSelection="true" />
     </HorizontalScrollView>
+
+    <TextView
+        style="@style/FilterRowLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_hospital" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/hospital_chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="6dp"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true" />
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/result_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/result_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/onSurfaceVariant"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/clear_filters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp"
+            android:text="@string/doctors_clear_filters"
+            android:textColor="@color/primary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <include
         android:id="@+id/loading_view"
@@ -75,7 +146,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:contentDescription="@string/doctors_empty_title"
-            android:src="@drawable/ic_empty_doctors" />
+            android:src="@drawable/ic_empty_search" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -100,7 +171,7 @@
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
