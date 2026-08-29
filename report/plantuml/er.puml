@@ -1,0 +1,64 @@
+@startuml
+skinparam defaultFontName "Vazirmatn"
+entity "users" as users {
+  * id : BIGINT <<PK>>
+  --
+  * full_name
+  * email <<UNIQUE>>
+  * phone
+  * password_hash
+  * role
+  * two_factor_enabled
+  * created_at
+}
+entity "doctors" as doctors {
+  * id : BIGINT <<PK>>
+  --
+  * full_name
+  * specialty
+  * city
+  * hospital_name
+  * visit_price
+  * rating
+  * available_days
+  * user_id <<FK, UNIQUE>>
+}
+entity "appointments" as appointments {
+  * id : BIGINT <<PK>>
+  --
+  * patient_id <<FK>>
+  * doctor_id <<FK>>
+  * date
+  * time
+  * status
+  * notes
+  --
+  * UNIQUE (doctor_id, date, time)
+}
+entity "reviews" as reviews {
+  * id : BIGINT <<PK>>
+  --
+  * patient_id <<FK>>
+  * doctor_id <<FK>>
+  * rating
+  * comment
+  --
+  * UNIQUE (patient_id, doctor_id)
+}
+entity "notifications" as notifications {
+  * id : BIGINT <<PK>>
+  --
+  * user_id <<FK>>
+  * title
+  * message
+  * type
+  * is_read
+  * created_at
+}
+users ||--o| doctors
+users ||--o{ appointments
+doctors ||--o{ appointments
+users ||--o{ reviews
+doctors ||--o{ reviews
+users ||--o{ notifications
+@enduml

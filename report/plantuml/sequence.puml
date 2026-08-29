@@ -1,0 +1,26 @@
+@startuml
+skinparam defaultFontName "Vazirmatn"
+actor "بیمار" as user
+participant "اپ اندروید" as app
+participant "کنترلر REST" as api
+participant "لایه سرویس" as svc
+database "PostgreSQL" as db
+
+user -> app : ایمیل و رمز
+app -> api : POST /api/auth/login
+api -> svc : بررسی BCrypt
+svc -> db : خواندن کاربر
+db --> svc : رکورد کاربر
+svc --> api : ارسال OTP به ایمیل
+api --> app : requiresOtp = true
+user -> app : کد ۶ رقمی
+app -> api : POST /api/auth/verify-login
+api --> app : JWT
+app -> api : GET /api/doctors?city&specialty&hospital
+api -> db : جستجوی فیلترشده
+db --> api : فهرست پزشکان
+app -> api : POST /api/appointments
+api -> svc : اعتبارسنجی اسلات + قفل یکتایی
+svc -> db : ذخیره نوبت PENDING
+api --> app : نوبت ثبت‌شده
+@enduml

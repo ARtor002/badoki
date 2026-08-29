@@ -26,3 +26,6 @@ logs/
 
 # ===== دیتابیس محلی (H2 در حالت fallback) =====
 backend/data/
+
+# ===== محیط ساخت گزارش =====
+.venv-report/

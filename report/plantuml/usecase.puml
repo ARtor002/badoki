@@ -1,0 +1,41 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName "Vazirmatn"
+skinparam shadowing false
+skinparam actorStyle awesome
+left to right direction
+
+actor "بیمار" as patient
+actor "پزشک" as doctor
+actor "مدیر سیستم" as admin
+
+rectangle "سامانه رزرو نوبت پزشک بدوکی" {
+  usecase "ثبت‌نام و ورود دومرحله‌ای" as uc1
+  usecase "جستجوی پزشک (شهر، تخصص، بیمارستان)" as uc2
+  usecase "رزرو نوبت" as uc3
+  usecase "تغییر زمان یا لغو نوبت" as uc4
+  usecase "ثبت امتیاز و نظر" as uc5
+  usecase "اطلاع‌رسانی و آموزش" as uc6
+  usecase "مشاهده نوبت بیماران" as uc7
+  usecase "تأیید یا رد نوبت" as uc8
+  usecase "ثبت نوبت انجام‌شده" as uc9
+  usecase "ویرایش پروفایل پزشک" as uc10
+  usecase "افزودن / ویرایش / حذف پزشک" as uc11
+  usecase "مدیریت کاربران و نقش‌ها" as uc12
+  usecase "مشاهده آمار کل سیستم" as uc13
+}
+
+patient --> uc1
+patient --> uc2
+patient --> uc3
+patient --> uc4
+patient --> uc5
+patient --> uc6
+doctor --> uc7
+doctor --> uc8
+doctor --> uc9
+doctor --> uc10
+admin --> uc11
+admin --> uc12
+admin --> uc13
+@enduml
