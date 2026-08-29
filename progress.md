@@ -39,11 +39,7 @@ Java/PlantUML JAR در این محیط نیست؛ PNGها از matplotlib ساخ
 
 - بک‌اند Spring Boot + PostgreSQL، اندروید Java، پکیج `ir.artor.badoki`
 - نقش‌ها: PATIENT / DOCTOR / ADMIN
-<<<<<<< HEAD
 - جستجوی پزشک: تخصص + شهر + بیمارستان (AND) — باگ `metaLoaded` درست شده
-=======
-- جستجوی پزشک: تخصص + شهر + بیمارستان (AND)
->>>>>>> e027581 (docs: بازسازی دیاگرام‌ها با چیدمان گزارش آرمین و فایل ورد قابل‌دانلود)
 - OTP ایمیل، انقضای نوبت، اطلاع‌رسانی، نظر، آموزش
 
 حساب نمونه: ali@example.com / 123456 — doctor@example.com / 123456 — admin@badoki.ir / admin123
