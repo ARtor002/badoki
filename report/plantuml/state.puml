@@ -1,0 +1,12 @@
+@startuml
+skinparam shadowing false
+[*] --> PENDING : ﺭﺎﻤﯿﺑ ﻭﺭﺯﺭ
+PENDING --> CONFIRMED : ﮏﺷﺰﭘ ﺪﯿﯾﺄﺗ
+PENDING --> CANCELED : ﺦﯾﺭﺎﺗ ﺎﺗ ﺪﯿﯾﺄﺗ ﻡﺪﻋ ﺎﯾ ﻮﻐﻟ
+CONFIRMED --> COMPLETED : ﯽﻌﻄﻗ ﯼﺎﻀﻘﻧﺍ / ﺖﯾﺰﯾﻭ
+CONFIRMED --> CANCELED : ﺭﺎﻤﯿﺑ / ﮏﺷﺰﭘ ﻮﻐﻟ
+PENDING : ﺪﯿﯾﺄﺗ ﺭﺎﻈﺘﻧﺍ ﺭﺩ
+CONFIRMED : ﯽﻌﻄﻗ
+COMPLETED : ﻩﺪﺷﻡﺎﺠﻧﺍ
+CANCELED : ﯽﻀﻘﻨﻣ / ﻮﻐﻟ
+@enduml

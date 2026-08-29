@@ -1,0 +1,49 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+class "User (ﺮﺑﺭﺎﮐ)" as User {
+  - id : Long
+  - fullName : String
+  - email : String
+  - phone : String
+  - passwordHash : String
+  - role : Role
+  - twoFactorEnabled : boolean
+  - createdAt : Instant
+}
+class "Doctor (ﮏﺷﺰﭘ)" as Doctor {
+  - id : Long
+  - fullName : String
+  - specialty : String
+  - city : String
+  - hospitalName : String
+  - visitPrice : long
+  - rating : double
+  - availableDays : String
+  - startHour / endHour : int
+  - userId : Long
+}
+class "Appointment (ﺖﺑﻮﻧ)" as Appointment {
+  - id : Long
+  - date : LocalDate
+  - time : LocalTime
+  - status : AppointmentStatus
+  - notes : String
+  - createdAt : Instant
+}
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
+}
+User "1" -- "0..1" Doctor
+Doctor "1" -- "*" Appointment
+User -- Role
+Appointment -- AppointmentStatus
+@enduml

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""گزارش کامل پروژه بدوکی — قالب نزدیک به آیین‌نامه نگارش پروژه کارشناسی:
-حاشیه راست ۳ و سایر ۲٫۵ سانتی‌متر، قلم B Nazanin ۱۴، انگلیسی Times New Roman،
-فاصله خطوط ۱٫۵، شرح جدول بالا و شرح شکل پایین، راست‌به‌چپ."""
+"""گزارش کامل پروژه بدوکی — سبک اسکریپت گزارش آرمین ترکمندی:
+حاشیه ۲٫۵ سانتی‌متر از هر چهار طرف، قلم B Nazanin ۱۳، انگلیسی Times New Roman،
+فاصله خطوط ۱٫۳۵، شرح جدول و شکل پایین، راست‌به‌چپ."""
 import os
+import shutil
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
@@ -14,6 +15,7 @@ from docx.oxml import OxmlElement
 ROOT = os.path.dirname(os.path.abspath(__file__))
 FIG = os.path.join(ROOT, "figures")
 OUT = os.path.join(ROOT, "گزارش-بدوکی.docx")
+OUT_EN = os.path.join(ROOT, "Badoki-Report.docx")
 
 BODY_FONT = "B Nazanin"
 LATIN_FONT = "Times New Roman"
@@ -23,7 +25,7 @@ sec = doc.sections[0]
 sec.page_width, sec.page_height = Cm(21), Cm(29.7)
 sec.top_margin = Cm(2.5)
 sec.bottom_margin = Cm(2.5)
-sec.right_margin = Cm(3.0)
+sec.right_margin = Cm(2.5)
 sec.left_margin = Cm(2.5)
 
 sectPr = sec._sectPr
@@ -74,8 +76,8 @@ def _bidi_p(p):
     return p
 
 
-def para(text, size=14, bold=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
-         space_after=8, line=1.5, indent=True, font=BODY_FONT, space_before=0):
+def para(text, size=13, bold=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
+         space_after=8, line=1.35, indent=True, font=BODY_FONT, space_before=0):
     p = doc.add_paragraph()
     pf = p.paragraph_format
     pf.alignment = align
@@ -93,22 +95,22 @@ def para(text, size=14, bold=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
 
 
 def h1(text):
-    p = para(text, size=18, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER,
+    p = para(text, size=17, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER,
              space_after=16, space_before=6, indent=False)
     return p
 
 
 def h2(text):
-    return para(text, size=16, bold=True, align=WD_ALIGN_PARAGRAPH.RIGHT,
+    return para(text, size=14.5, bold=True, align=WD_ALIGN_PARAGRAPH.RIGHT,
                 space_after=10, space_before=12, indent=False)
 
 
 def h3(text):
-    return para(text, size=14, bold=True, align=WD_ALIGN_PARAGRAPH.RIGHT,
+    return para(text, size=13, bold=True, align=WD_ALIGN_PARAGRAPH.RIGHT,
                 space_after=8, space_before=8, indent=False)
 
 
-def bullet(text, size=14):
+def bullet(text, size=13):
     p = para("•  " + text, size=size, indent=False, space_after=4)
     p.paragraph_format.left_indent = Cm(0.7)
     return p
@@ -119,7 +121,7 @@ def cap(text):
                 space_after=10, space_before=4, indent=False)
 
 
-def figure(img, caption, width_cm=14.5):
+def figure(img, caption, width_cm=15):
     p = doc.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(10)
@@ -138,7 +140,7 @@ def shade(cell, color="D9F1ED"):
     tcPr.append(shd)
 
 
-def table(headers, rows, widths=None, font_size=11):
+def table(headers, rows, widths=None, font_size=11, caption=None):
     t = doc.add_table(rows=1, cols=len(headers))
     t.style = "Table Grid"
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -164,8 +166,11 @@ def table(headers, rows, widths=None, font_size=11):
         for i, w in enumerate(widths):
             for row in t.rows:
                 row.cells[i].width = Cm(w)
-    sp = doc.add_paragraph()
-    sp.paragraph_format.space_after = Pt(2)
+    if caption:
+        cap(caption)
+    else:
+        sp = doc.add_paragraph()
+        sp.paragraph_format.space_after = Pt(2)
     return t
 
 
@@ -412,7 +417,6 @@ h3("۳-۴-۱- نمودار موارد کاربرد")
 para("بازیگران اصلی بیمار، پزشک و مدیر سیستم‌اند. بیمار جستجو، رزرو، لغو، نظر و اطلاع‌رسانی را آغاز می‌کند؛ پزشک نوبت‌ها را مدیریت و پروفایل را ویرایش می‌کند؛ مدیر بر پزشکان، کاربران و آمار نظارت دارد. شکل ۳-۱ این موارد را نشان می‌دهد.")
 figure("usecase.png", "شکل ۳-۱: نمودار موارد کاربرد سامانه بدوکی", 16)
 para("جزئیات مورد کاربرد «رزرو نوبت» در جدول ۳-۱ آمده است.")
-cap("جدول ۳-۱: شرح سناریوی مورد کاربرد «رزرو نوبت»")
 table(
     ["بخش", "شرح"],
     [
@@ -426,6 +430,7 @@ table(
          "روز غیرکاری، اسلات پر، تاریخ خارج از ۳۰ روز یا رزرو تکراری: پیام خطای فارسی و رد ثبت."],
     ],
     widths=[3.5, 12.0],
+    caption="جدول ۳-۱: شرح سناریوی مورد کاربرد «رزرو نوبت»",
 )
 
 h3("۳-۴-۲- نمودار توالی")
@@ -441,14 +446,13 @@ para("هسته دامنه در شکل ۳-۴ آمده است: User با نقش، 
 figure("class.png", "شکل ۳-۴: نمودار کلاس موجودیت‌های اصلی سامانه", 16)
 
 h3("۳-۴-۵- نمودار وضعیت نوبت")
-para("نوبت در چهار وضعیت زندگی می‌کند. شکل ۳-۶ گذارها را نشان می‌دهد: تأیید پزشک PENDING را به CONFIRMED می‌برد؛ ویزیت یا انقضای نوبت قطعی آن را COMPLETED می‌کند؛ لغو بیمار/پزشک یا انقضای نوبت تأییدنشده به CANCELED می‌انجامد.")
-figure("state.png", "شکل ۳-۶: نمودار وضعیت نوبت", 15)
+para("نوبت در چهار وضعیت زندگی می‌کند. شکل ۳-۵ گذارها را نشان می‌دهد: تأیید پزشک PENDING را به CONFIRMED می‌برد؛ ویزیت یا انقضای نوبت قطعی آن را COMPLETED می‌کند؛ لغو بیمار/پزشک یا انقضای نوبت تأییدنشده به CANCELED می‌انجامد.")
+figure("state.png", "شکل ۳-۵: نمودار وضعیت نوبت", 15)
 
 h2("۳-۵- طراحی پایگاه داده")
 para("پایگاه رابطه‌ای PostgreSQL به‌خاطر تراکنش و قید یکتایی انتخاب شد. جدول appointments با قید uk_doctor_slot از رزرو همزمان یک اسلات جلوگیری می‌کند و جدول reviews با uk_review_patient_doctor مانع ثبت نظر تکراری است. شکل ۳-۶ نمودار ER را نشان می‌دهد.")
 figure("er.png", "شکل ۳-۶: نمودار موجودیت–رابطه پایگاه داده", 16)
 
-cap("جدول ۳-۲: ساختار جدول users")
 table(["ستون", "نوع", "شرح"], [
     ["id", "BIGINT PK", "شناسه کاربر"],
     ["full_name", "VARCHAR(100)", "نام و نام خانوادگی"],
@@ -458,9 +462,8 @@ table(["ستون", "نوع", "شرح"], [
     ["role", "VARCHAR(20)", "PATIENT / DOCTOR / ADMIN"],
     ["two_factor_enabled", "BOOLEAN", "فعال بودن ورود دومرحله‌ای"],
     ["created_at", "TIMESTAMP", "زمان ثبت"],
-], widths=[4.5, 4.5, 6.5])
+], widths=[4.5, 4.5, 6.5], caption="جدول ۳-۲: ساختار جدول users")
 
-cap("جدول ۳-۳: ساختار جدول doctors")
 table(["ستون", "نوع", "شرح"], [
     ["id", "BIGINT PK", "شناسه پزشک"],
     ["full_name / specialty / city", "VARCHAR", "هویت حرفه‌ای"],
@@ -470,9 +473,8 @@ table(["ستون", "نوع", "شرح"], [
     ["available_days", "VARCHAR", "روزهای کاری CSV"],
     ["start_hour / end_hour / slot_minutes", "INT", "بازه و گام نوبت"],
     ["user_id", "BIGINT UNIQUE FK", "حساب نقش پزشک"],
-], widths=[5.5, 4.0, 6.0])
+], widths=[5.5, 4.0, 6.0], caption="جدول ۳-۳: ساختار جدول doctors")
 
-cap("جدول ۳-۴: ساختار جدول appointments")
 table(["ستون", "نوع", "شرح"], [
     ["id", "BIGINT PK", "شناسه نوبت"],
     ["patient_id", "BIGINT FK", "ارجاع به users"],
@@ -480,24 +482,22 @@ table(["ستون", "نوع", "شرح"], [
     ["date / time", "DATE / TIME", "اسلات"],
     ["status", "VARCHAR(20)", "PENDING / CONFIRMED / COMPLETED / CANCELED"],
     ["UNIQUE", "(doctor_id, date, time)", "قفل ضد رزرو دوبل"],
-], widths=[4.5, 4.5, 6.5])
+], widths=[4.5, 4.5, 6.5], caption="جدول ۳-۴: ساختار جدول appointments")
 
-cap("جدول ۳-۵: ساختار جدول reviews")
 table(["ستون", "نوع", "شرح"], [
     ["id", "BIGINT PK", "شناسه نظر"],
     ["patient_id / doctor_id", "BIGINT FK", "نویسنده و پزشک"],
     ["rating", "INT", "۱ تا ۵"],
     ["UNIQUE", "(patient_id, doctor_id)", "یک نظر برای هر زوج"],
-], widths=[5.0, 4.5, 6.0])
+], widths=[5.0, 4.5, 6.0], caption="جدول ۳-۵: ساختار جدول reviews")
 
-cap("جدول ۳-۶: ساختار جدول notifications")
 table(["ستون", "نوع", "شرح"], [
     ["id", "BIGINT PK", "شناسه اعلان"],
     ["user_id", "BIGINT FK", "گیرنده"],
     ["title / message", "VARCHAR", "عنوان و متن"],
     ["type", "VARCHAR(40)", "CONFIRMED / CANCELED / COMPLETED / EXPIRED"],
     ["is_read", "BOOLEAN", "خوانده‌شده"],
-], widths=[4.5, 4.5, 6.5])
+], widths=[4.5, 4.5, 6.5], caption="جدول ۳-۶: ساختار جدول notifications")
 
 h2("۳-۶- معماری و امنیت")
 h3("۳-۶-۱- معماری لایه‌ای")
@@ -528,7 +528,6 @@ para("بک‌اند با Maven و Spring Boot ۳٫۳ در پوشه backend سا�
 
 h2("۴-۳- احراز هویت دومرحله‌ای و بازیابی رمز")
 para("AuthController شش مسیر اصلی دارد. OtpService کد را در حافظه با کلید ایمیل+هدف نگه می‌دارد. MailService از SMTP جیمیل استفاده می‌کند؛ اگر رمز برنامه تنظیم نشده باشد، کد در پاسخ API (devOtp) برمی‌گردد تا آزمایش بدون ایمیل ممکن باشد. پس از verify-login توکن JWT صادر می‌شود.")
-cap("جدول ۴-۱: اندپوینت‌های احراز هویت")
 table(["متد", "مسیر", "توضیح"], [
     ["POST", "/api/auth/login", "گام ۱ ورود: بررسی رمز و ارسال OTP"],
     ["POST", "/api/auth/verify-login", "گام ۲ ورود: تأیید کد و JWT"],
@@ -536,7 +535,7 @@ table(["متد", "مسیر", "توضیح"], [
     ["POST", "/api/auth/verify-register", "تأیید کد و ساخت حساب"],
     ["POST", "/api/auth/forgot-password", "ارسال کد بازیابی"],
     ["POST", "/api/auth/reset-password", "تأیید کد و رمز جدید"],
-], widths=[2.2, 6.5, 6.8])
+], widths=[2.2, 6.5, 6.8], caption="جدول ۴-۱: اندپوینت‌های احراز هویت")
 
 h2("۴-۴- جستجو و فیلتر پزشکان")
 para("یکی از اشکال نسخه میانی این بود که صفحه پزشکان گاهی فقط فیلتر شهر و گاهی فقط تخصص را نشان می‌داد. علت، فلگ مشترک metaLoaded بود که پس از رسیدن نخستین پاسخ متا، ردیف دوم را نمی‌ساخت. در نسخه نهایی سه ردیف مستقل با برچسب تخصص، شهر و بیمارستان ساخته می‌شود و پارامتر hospital به GET /api/doctors و مسیر /api/meta/hospitals اضافه شده است. پرس‌وجوی JPA فیلترها را با AND و عبارت متنی را روی نام، تخصص، شهر و بیمارستان اعمال می‌کند.")
@@ -552,7 +551,6 @@ h2("۴-۷- اپلیکیشن اندروید")
 para("ارتباط شبکه با Retrofit است و توکن به‌صورت خودکار به هدر افزوده می‌شود. تاریخ‌ها با الگوریتم jalaali به شمسی برمی‌گردند و اعداد با ارقام فارسی نمایش داده می‌شوند. برای نوبت، به‌روزرسانی خوش‌بینانه پیاده شده: تغییر ابتدا در UI اعمال و در خطای سرور بازگردانده می‌شود. حالت‌های بارگذاری، خطا با تلاش دوباره، و خالی با تصویرسازی برای صفحات اصلی وجود دارد.")
 
 h2("۴-۸- فناوری‌ها و خلاصه فصل")
-cap("جدول ۴-۲: فناوری‌ها و ابزارهای به‌کاررفته")
 table(["بخش", "فناوری", "کاربرد"], [
     ["بک‌اند", "Spring Boot 3.3 / Java", "REST API"],
     ["بک‌اند", "Spring Security + JWT", "احراز هویت و RBAC"],
@@ -561,7 +559,7 @@ table(["بخش", "فناوری", "کاربرد"], [
     ["داده", "PostgreSQL (H2 اختیاری)", "ماندگاری"],
     ["اندروید", "Java + Material 3", "UI بومی RTL"],
     ["اندروید", "Retrofit / OkHttp", "کلاینت HTTP"],
-], widths=[3.0, 5.5, 7.0])
+], widths=[3.0, 5.5, 7.0], caption="جدول ۴-۲: فناوری‌ها و ابزارهای به‌کاررفته")
 para("در این فصل نگاشت طرح به کد برای احراز هویت، جستجو، نوبت، اطلاع‌رسانی و کلاینت اندروید بیان شد. فصل بعد همین قابلیت‌ها را از منظر آزمون می‌سنجد.")
 page()
 
@@ -576,7 +574,6 @@ h2("۵-۲- راهبرد آزمون")
 para("آزمون واحد با Spring Data JPA روی H2، جستجوی ترکیبی و فهرست‌های متا را پوشش می‌دهد (DoctorRepositorySearchTest). آزمون‌های پذیرش به‌صورت سناریوی دستی با حساب‌های نمونه (پیوست ب) اجرا می‌شوند. زمان‌بند انقضا با فراخوانی منطق expire هنگام باز شدن لیست نیز به‌صورت تنبل قابل مشاهده است.")
 
 h2("۵-۳- سناریوهای کارکردی و امنیتی")
-cap("جدول ۵-۱: نمونه سناریوهای آزمون کارکردی")
 table(["شناسه", "سناریو", "نتیجه مورد انتظار"], [
     ["T01", "ثبت‌نام با OTP نادرست", "حساب ساخته نمی‌شود؛ پیام فارسی"],
     ["T02", "ورود صحیح + OTP", "JWT صادر و داشبورد نقش باز می‌شود"],
@@ -586,7 +583,7 @@ table(["شناسه", "سناریو", "نتیجه مورد انتظار"], [
     ["T06", "نظر بدون نوبت انجام‌شده", "رد درخواست"],
     ["T07", "ادمین بدون نقش ADMIN", "پاسخ ۴۰۳"],
     ["T08", "نوبت PENDING با تاریخ گذشته", "پس از expire: لغو و اعلان انقضا"],
-], widths=[2.0, 6.5, 7.0])
+], widths=[2.0, 6.5, 7.0], caption="جدول ۵-۱: نمونه سناریوهای آزمون کارکردی")
 para("از منظر امنیت، رمز در پایگاه به شکل هش است، OTP پس از موفقیت حذف می‌شود، و مسیرهای /api/admin و /api/doctor با نقش محدود شده‌اند. مسیرهای عمومی فقط auth، فهرست پزشکان و meta هستند.")
 
 h2("۵-۴- ارزیابی واسط کاربری")
@@ -659,7 +656,6 @@ para("اطلاع‌رسانی: GET /api/notifications ، GET /api/notifications/
 page()
 
 h1("پیوست ب — حساب‌های نمونه و اجرای سامانه")
-cap("جدول پ-۱: حساب‌های نمونه")
 table(["نقش", "ایمیل", "رمز"], [
     ["بیمار", "ali@example.com", "123456"],
     ["پزشک", "doctor@example.com", "123456"],
@@ -671,4 +667,12 @@ para("فایل‌های PlantUML دیاگرام‌ها در پوشه report/plan
      indent=False)
 
 doc.save(OUT)
+shutil.copyfile(OUT, OUT_EN)
+root_fa = os.path.join(os.path.dirname(ROOT), "گزارش-بدوکی.docx")
+root_en = os.path.join(os.path.dirname(ROOT), "Badoki-Report.docx")
+shutil.copyfile(OUT, root_fa)
+shutil.copyfile(OUT, root_en)
 print("saved:", OUT)
+print("saved:", OUT_EN)
+print("saved:", root_fa)
+print("saved:", root_en)

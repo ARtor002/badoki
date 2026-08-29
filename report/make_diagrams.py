@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""دیاگرام‌های UML گزارش بدوکی — فونت وزیرمتن و شکل‌دهی فارسی"""
+"""دیاگرام‌های UML گزارش بدوکی — چیدمان همان اسکریپت گزارش آرمین ترکمندی.
+matplotlib 3.11 خودش فارسی را شکل می‌دهد؛ بنابراین reshape/bidi اینجا استفاده نمی‌شود
+(اگر reshape شود متن برعکس دیده می‌شود)."""
 import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-from matplotlib.patches import FancyBboxPatch, Ellipse, Rectangle, FancyArrowPatch, Circle, Polygon
-import arabic_reshaper
-from bidi.algorithm import get_display
+from matplotlib.patches import FancyBboxPatch, Ellipse, Rectangle, Circle, Polygon
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "figures")
@@ -23,262 +23,231 @@ FA_B = fm.FontProperties(fname=FONT_BOLD)
 
 TEAL = "#0F766E"
 TEAL_BG = "#E6F7F4"
-TEAL_DK = "#115E59"
 INK = "#17201F"
 SLATE = "#334155"
 AMBER = "#D97706"
 AMBER_BG = "#FEF3C7"
 GREEN_BG = "#DCFCE7"
-GREEN = "#15803D"
 RED_BG = "#FEE2E2"
 RED = "#B91C1C"
+GREEN = "#15803D"
 SOFT = "#F8FCFB"
 WHITE = "#FFFFFF"
-LINE = "#475569"
 
 
 def fa(t):
-    """matplotlib 3.11 با فونت وزیرمتن خودش شکل‌دهی فارسی را درست انجام می‌دهد."""
     return "" if t is None else str(t)
 
 
-def new_ax(w, h):
+def new_ax(w=15, h=9.5):
     fig, ax = plt.subplots(figsize=(w, h))
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 100)
     ax.axis("off")
-    fig.tight_layout(pad=0.4)
     return fig, ax
 
 
-def box(ax, x, y, w, h, text, fc=TEAL_BG, ec=TEAL, fs=10, bold=False, tc=INK, radius=1.4):
-    p = FancyBboxPatch((x, y), w, h, boxstyle=f"round,pad=0.35,rounding_size={radius}",
-                       linewidth=1.35, edgecolor=ec, facecolor=fc)
+def box(ax, x, y, w, h, text, fc=TEAL_BG, ec=TEAL, fs=11, bold=False, tc=INK, rounded=True):
+    style = "round,pad=0.8,rounding_size=1.5" if rounded else "square,pad=0.8"
+    p = FancyBboxPatch((x, y), w, h, boxstyle=style,
+                       linewidth=1.4, edgecolor=ec, facecolor=fc)
     ax.add_patch(p)
-    if text:
-        ax.text(x + w / 2, y + h / 2, fa(text), ha="center", va="center",
-                fontproperties=FA_B if bold else FA, fontsize=fs, color=tc,
-                wrap=True)
+    ax.text(x + w / 2, y + h / 2, fa(text), ha="center", va="center",
+            fontproperties=FA_B if bold else FA, fontsize=fs, color=tc)
 
 
-def ellipse(ax, cx, cy, w, h, text, fc=WHITE, ec=TEAL, fs=9):
-    e = Ellipse((cx, cy), w, h, linewidth=1.25, edgecolor=ec, facecolor=fc)
+def ellipse(ax, cx, cy, w, h, text, fc=WHITE, ec=TEAL, fs=10.5):
+    e = Ellipse((cx, cy), w, h, linewidth=1.3, edgecolor=ec, facecolor=fc)
     ax.add_patch(e)
     ax.text(cx, cy, fa(text), ha="center", va="center",
             fontproperties=FA, fontsize=fs, color=INK)
 
 
-def actor(ax, x, y, name, fs=10.5):
-    ax.add_patch(Circle((x, y + 7.2), 2.15, fill=True, facecolor=TEAL, edgecolor=TEAL))
-    ax.plot([x, x], [y + 5.0, y - 1.6], color=TEAL, lw=1.8)
-    ax.plot([x - 3.3, x + 3.3], [y + 3.2, y + 3.2], color=TEAL, lw=1.8)
-    ax.plot([x, x - 2.8], [y - 1.6, y - 5.4], color=TEAL, lw=1.8)
-    ax.plot([x, x + 2.8], [y - 1.6, y - 5.4], color=TEAL, lw=1.8)
-    ax.text(x, y - 8.0, fa(name), ha="center", va="center", fontproperties=FA_B, fontsize=fs, color=TEAL_DK)
+def actor(ax, x, y, name, fs=11):
+    ax.add_patch(plt.Circle((x, y + 8.5), 2.6, fill=True, facecolor=TEAL, edgecolor=TEAL))
+    ax.plot([x, x], [y + 5.5, y - 2.5], color=TEAL, lw=1.8)
+    ax.plot([x - 4, x + 4], [y + 3.5, y + 3.5], color=TEAL, lw=1.8)
+    ax.plot([x, x - 3.5], [y - 2.5, y - 6.5], color=TEAL, lw=1.8)
+    ax.plot([x, x + 3.5], [y - 2.5, y - 6.5], color=TEAL, lw=1.8)
+    ax.text(x, y - 9.5, fa(name), ha="center", va="center", fontproperties=FA_B, fontsize=fs)
 
 
-def line(ax, x1, y1, x2, y2, dashed=False, color=LINE, lw=1.05):
-    ax.plot([x1, x2], [y1, y2], color=color, lw=lw, linestyle="--" if dashed else "-")
+def line(ax, x1, y1, x2, y2, dashed=False):
+    ax.plot([x1, x2], [y1, y2], color=SLATE, lw=1.2,
+            linestyle="--" if dashed else "-")
 
 
-def arrow(ax, x1, y1, x2, y2, text=None, color=TEAL, dashed=False, fs=8.2,
-          text_dx=0, text_dy=1.15, both=False):
+def arrow(ax, x1, y1, x2, y2, text=None, color=TEAL, dashed=False, fs=9.5,
+          text_dx=0, text_dy=0.9):
     ax.annotate(
         "",
         xy=(x2, y2), xytext=(x1, y1),
         arrowprops=dict(
             arrowstyle="->",
             color=color,
-            lw=1.05,
+            lw=1.2,
             linestyle=(0, (3, 2)) if dashed else "-",
-            mutation_scale=8,
+            mutation_scale=9,
         ),
     )
     if text:
         mx, my = (x1 + x2) / 2 + text_dx, (y1 + y2) / 2 + text_dy
         ax.text(mx, my, fa(text), ha="center", va="center",
-                fontproperties=FA, fontsize=fs, color=SLATE,
-                bbox=dict(boxstyle="round,pad=0.18", fc=WHITE, ec="none", alpha=0.94))
+                fontproperties=FA, fontsize=fs, color="#1E293B",
+                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="none", alpha=0.9))
 
 
-def diamond(ax, cx, cy, w, h, text, fs=9):
+def diamond(ax, cx, cy, w, h, text, fs=10):
     verts = [(cx, cy + h / 2), (cx + w / 2, cy), (cx, cy - h / 2), (cx - w / 2, cy)]
-    p = Polygon(verts, closed=True, facecolor=AMBER_BG, edgecolor=AMBER, linewidth=1.35)
+    p = Polygon(verts, closed=True, facecolor=AMBER_BG, edgecolor=AMBER, linewidth=1.4)
     ax.add_patch(p)
     ax.text(cx, cy, fa(text), ha="center", va="center", fontproperties=FA, fontsize=fs, color="#431407")
 
 
+def lifeline(ax, x, name, y_top=98, y_bot=6):
+    box(ax, x - 8, y_top - 2.5, 16, 5.2, name, fc=TEAL, ec=TEAL, fs=10, bold=True, tc=WHITE)
+    ax.plot([x, x], [y_top - 2.5, y_bot], color="#64748B", lw=1.0)
+    return x
+
+
 def save(fig, name):
-    path = os.path.join(OUT, name)
-    fig.savefig(path, dpi=175, bbox_inches="tight", facecolor=WHITE, pad_inches=0.25)
+    fig.savefig(os.path.join(OUT, name), dpi=170, bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print("saved", name)
-
-
-def cls_box(ax, x, y, w, h, title, fields, stereotype=None, fc=TEAL_BG):
-    ax.add_patch(Rectangle((x, y), w, h, linewidth=1.4, edgecolor=TEAL, facecolor=fc))
-    header_h = 7.2 if stereotype else 6.2
-    ax.plot([x, x + w], [y + h - header_h, y + h - header_h], color=TEAL, lw=1.15)
-    title_y = y + h - 2.4 if stereotype else y + h - 3.1
-    if stereotype:
-        ax.text(x + w / 2, y + h - 2.0, fa(stereotype), ha="center", va="center",
-                fontproperties=FA, fontsize=8, color=TEAL)
-        ax.text(x + w / 2, y + h - 4.6, fa(title), ha="center", va="center",
-                fontproperties=FA_B, fontsize=11, color=TEAL_DK)
-    else:
-        ax.text(x + w / 2, title_y, fa(title), ha="center", va="center",
-                fontproperties=FA_B, fontsize=11, color=TEAL_DK)
-    for i, f in enumerate(fields):
-        ax.text(x + 1.3, y + h - header_h - 3.3 - i * 3.7, fa(f), ha="left", va="center",
-                fontproperties=FA, fontsize=8.6, color=INK)
+    print("saved:", name)
 
 
 # =========================================================
-# ۱) موارد کاربرد
+# ۱) موارد کاربرد — سه ستون مثل گزارش آرمین
 # =========================================================
 def use_case():
-    fig, ax = new_ax(17.5, 11.2)
-    ax.add_patch(Rectangle((16, 5), 68, 90, linewidth=1.55, edgecolor=TEAL,
-                           facecolor=SOFT, linestyle="--"))
-    ax.text(50, 91.5, fa("سامانه رزرو نوبت پزشک «بدوکی»"), ha="center", va="center",
+    fig, ax = new_ax(16, 11)
+    rect = Rectangle((14, 4), 70, 92, linewidth=1.6, edgecolor=TEAL,
+                     facecolor=SOFT, linestyle="--")
+    ax.add_patch(rect)
+    ax.text(49, 93.5, fa("سامانه رزرو نوبت پزشک «بدوکی»"), ha="center", va="center",
             fontproperties=FA_B, fontsize=13, color=TEAL)
 
-    actor(ax, 7.5, 52, "بیمار")
-    actor(ax, 93, 74, "پزشک")
-    actor(ax, 93, 24, "مدیر سیستم")
+    actor(ax, 7, 55, "بیمار")
+    actor(ax, 93.5, 72, "پزشک")
+    actor(ax, 93.5, 20, "مدیر سیستم")
 
-    p_uc = [
-        (29, 80, "ثبت‌نام / ورود دومرحله‌ای"),
-        (29, 67.5, "جستجوی پزشک\n(شهر، تخصص، بیمارستان)"),
-        (29, 55, "رزرو نوبت"),
-        (29, 43.5, "تغییر زمان / لغو نوبت"),
-        (29, 32, "ثبت امتیاز و نظر"),
-        (29, 20.5, "اطلاع‌رسانی و آموزش"),
-    ]
-    for cx, cy, t in p_uc:
-        ellipse(ax, cx, cy, 20.5, 9.0, t, fs=8.4)
-        line(ax, 11.2, 52, 18.8, cy)
+    for cy, t in ((84, "ثبت‌نام و ورود دومرحله‌ای"),
+                  (71, "جستجو و مشاهده پزشکان"),
+                  (58, "مشاهده اسلات‌های خالی"),
+                  (45, "رزرو نوبت جدید"),
+                  (32, "تغییر زمان / لغو نوبت"),
+                  (19, "مشاهده نوبت‌های من")):
+        ellipse(ax, 29, cy, 22, 9, t, fs=9.5)
+        line(ax, 11.5, 55, 18, cy)
 
-    d_uc = [
-        (50.5, 78, "مشاهده نوبت بیماران"),
-        (50.5, 64, "تأیید / رد نوبت"),
-        (50.5, 50, "ثبت نوبت انجام‌شده"),
-        (50.5, 36, "ویرایش پروفایل پزشک"),
-    ]
-    for cx, cy, t in d_uc:
-        ellipse(ax, cx, cy, 20.5, 9.0, t, fs=8.4)
-        line(ax, 89.5, 74, 60.7, cy)
+    for cy, t in ((86, "مشاهده نوبت‌های بیماران"),
+                  (74, "تأیید / رد نوبت"),
+                  (62, "ثبت نوبت انجام‌شده"),
+                  (50, "لغو نوبت توسط پزشک"),
+                  (38, "ویرایش پروفایل پزشک")):
+        ellipse(ax, 51, cy, 20, 8.5, t, fs=9.2)
+        line(ax, 89, 72, 61, cy)
 
-    a_uc = [
-        (72, 48, "افزودن / ویرایش / حذف پزشک"),
-        (72, 33, "مدیریت کاربران و نقش‌ها"),
-        (72, 18, "مشاهده آمار کل سیستم"),
-    ]
-    for cx, cy, t in a_uc:
-        ellipse(ax, cx, cy, 21.5, 9.2, t, fs=8.3)
-        line(ax, 89.5, 24, 82.7, cy)
+    for cy, t in ((30, "افزودن / ویرایش / حذف پزشک"),
+                  (18, "مدیریت کاربران و نقش‌ها"),
+                  (8, "مشاهده آمار کل سیستم")):
+        ellipse(ax, 74, cy, 22, 8.5, t, fs=9.0)
+        line(ax, 89, 20, 85, cy)
 
-    ax.text(29, 87.4, fa("امکانات بیمار"), ha="center", fontproperties=FA_B, fontsize=8.5, color="#64748B")
-    ax.text(50.5, 85.6, fa("امکانات پزشک"), ha="center", fontproperties=FA_B, fontsize=8.5, color="#64748B")
-    ax.text(72, 55.6, fa("امکانات مدیر"), ha="center", fontproperties=FA_B, fontsize=8.5, color="#64748B")
     save(fig, "usecase.png")
 
 
 # =========================================================
-# ۲) توالی
+# ۲) توالی — سه خط عمر مثل گزارش آرمین
 # =========================================================
 def sequence():
-    fig, ax = new_ax(16.2, 12.4)
-    xs = {"app": 14, "api": 40, "svc": 66, "db": 88}
-    names = {
-        "app": "اپ اندروید",
-        "api": "کنترلر REST",
-        "svc": "لایه سرویس",
-        "db": "PostgreSQL",
-    }
-    for k, x in xs.items():
-        box(ax, x - 7.2, 93.2, 14.4, 5.4, names[k], fc=TEAL, ec=TEAL, fs=9.5, bold=True, tc=WHITE, radius=0.8)
-        ax.plot([x, x], [93.2, 5], color="#94A3B8", lw=1.05, linestyle="-")
+    fig, ax = new_ax(15.5, 10.5)
+    xs = {"app": 16, "server": 50, "db": 84}
+    lifeline(ax, xs["app"], "بیمار (اپ اندروید)", y_top=96, y_bot=6)
+    lifeline(ax, xs["server"], "سرور بدوکی (Spring Boot)", y_top=96, y_bot=6)
+    lifeline(ax, xs["db"], "پایگاه داده (PostgreSQL)", y_top=96, y_bot=6)
 
-    steps = [
-        (86, "app", "api", "۱. POST /api/auth/login", False),
-        (80, "api", "svc", "۲. بررسی ایمیل و BCrypt", False),
-        (74.5, "svc", "db", "۳. خواندن کاربر", False),
-        (69, "db", "svc", "۴. رکورد کاربر", True),
-        (63.5, "svc", "api", "۵. ارسال OTP به ایمیل", True),
-        (58, "api", "app", "۶. requiresOtp = true", True),
-        (52, "app", "api", "۷. POST /verify-login", False),
-        (46.5, "api", "app", "۸. توکن JWT", True),
-        (40.5, "app", "api", "۹. GET /api/doctors?city&specialty&hospital", False),
-        (34.5, "api", "db", "۱۰. جستجوی فیلترشده", False),
-        (29, "db", "api", "۱۱. فهرست پزشکان", True),
-        (23, "app", "api", "۱۲. POST /api/appointments", False),
-        (17, "api", "svc", "۱۳. اعتبارسنجی اسلات + قفل یکتایی", False),
-        (11.2, "svc", "db", "۱۴. ذخیره نوبت PENDING", False),
-        (6.2, "api", "app", "۱۵. نوبت ثبت‌شده", True),
-    ]
-    for y, a, b, txt, dashed in steps:
-        col = "#64748B" if dashed else TEAL
-        arrow(ax, xs[a], y, xs[b], y, txt, color=col, dashed=dashed, fs=8.0, text_dy=1.35)
+    y = 86
+    arrow(ax, xs["app"], y, xs["server"], y, "ورود با ایمیل و رمز عبور")
+    y -= 7
+    arrow(ax, xs["server"], y, xs["db"], y, "استعلام کاربر و بررسی BCrypt", fs=9)
+    y -= 6.5
+    arrow(ax, xs["db"], y, xs["server"], y, "اطلاعات کاربر", dashed=True, color="#64748B", fs=9)
+    y -= 6.5
+    arrow(ax, xs["server"], y, xs["app"], y, "ارسال OTP ؛ requiresOtp", dashed=True, color="#64748B")
+    y -= 7
+    arrow(ax, xs["app"], y, xs["server"], y, "تأیید کد و دریافت JWT")
+    y -= 7
+    arrow(ax, xs["app"], y, xs["server"], y, "GET پزشکان با شهر / تخصص / بیمارستان")
+    y -= 6.5
+    arrow(ax, xs["server"], y, xs["db"], y, "پرس‌وجوی فیلترشده", fs=9)
+    y -= 6.5
+    arrow(ax, xs["db"], y, xs["app"], y, "لیست پزشکان و اسلات‌ها", dashed=True, color="#64748B", fs=9)
+    y -= 7
+    arrow(ax, xs["app"], y, xs["server"], y, "POST ثبت نوبت")
+    y -= 6.5
+    arrow(ax, xs["server"], y, xs["db"], y, "ذخیره نوبت با وضعیت در انتظار تأیید", fs=9)
+    y -= 6.5
+    arrow(ax, xs["server"], y, xs["app"], y, "نوبت ثبت‌شده (PENDING)", dashed=True, color="#64748B")
     save(fig, "sequence.png")
 
 
 # =========================================================
-# ۳) فعالیت
+# ۳) فعالیت — همان جریان گزارش آرمین
 # =========================================================
 def activity():
-    fig, ax = new_ax(11.5, 16.2)
+    fig, ax = new_ax(13, 15)
 
     def node(x, y, w, h, text, fc=TEAL_BG):
-        box(ax, x - w / 2, y - h / 2, w, h, text, fc=fc, fs=10)
+        box(ax, x - w / 2, y - h / 2, w, h, text, fc=fc, fs=10.5)
 
-    x = 52
-    ax.add_patch(Circle((x, 97.2), 1.7, fill=True, facecolor=TEAL, edgecolor=TEAL))
-    ax.text(x + 5, 97.2, fa("شروع"), ha="left", va="center", fontproperties=FA, fontsize=9, color=SLATE)
-    arrow(ax, x, 95.3, x, 92.2)
-    node(x, 89.0, 40, 5.8, "ورود دومرحله‌ای بیمار")
-    arrow(ax, x, 86.0, x, 82.6)
-    node(x, 79.6, 44, 5.8, "جستجو با تخصص / شهر / بیمارستان")
-    arrow(ax, x, 76.6, x, 73.2)
-    node(x, 70.2, 40, 5.8, "انتخاب پزشک و مشاهده اسلات‌ها")
-    arrow(ax, x, 67.2, x, 63.6)
-    diamond(ax, x, 59.4, 28, 8.2, "روز کاری است؟")
+    def down(x, y1, y2, label=None, lx=0):
+        arrow(ax, x, y1, x, y2, label, text_dx=lx, fs=9)
 
-    # خیر — سمت چپ
-    arrow(ax, x - 14, 59.4, x - 28, 59.4, "خیر", text_dy=1.6, fs=8.5)
-    node(x - 28, 52.4, 26, 5.2, "انتخاب تاریخ دیگر", fc="#F1F5F9")
-    ax.annotate("", xy=(x, 67.0), xytext=(x - 28, 49.6),
-                arrowprops=dict(arrowstyle="-|>", color=LINE, lw=1.15,
-                                connectionstyle="arc3,rad=0.25"))
-
-    arrow(ax, x, 55.2, x, 51.4, "بله", text_dx=3.2, fs=8.5)
-    node(x, 47.8, 40, 5.8, "انتخاب ساعت از اسلات‌های خالی")
-    arrow(ax, x, 44.8, x, 41.2)
-    diamond(ax, x, 36.8, 28, 8.2, "اسلات خالی است؟")
-
-    arrow(ax, x - 14, 36.8, x - 28, 36.8, "خیر", text_dy=1.6, fs=8.5)
-    node(x - 28, 29.6, 26, 5.2, "انتخاب ساعت دیگر", fc="#F1F5F9")
-    ax.annotate("", xy=(x, 44.6), xytext=(x - 28, 26.8),
-                arrowprops=dict(arrowstyle="-|>", color=LINE, lw=1.15,
-                                connectionstyle="arc3,rad=0.25"))
-
-    arrow(ax, x, 32.6, x, 28.8, "بله", text_dx=3.2, fs=8.5)
-    node(x, 25.4, 44, 5.8, "ثبت نوبت — وضعیت: در انتظار تأیید", fc=AMBER_BG)
-    arrow(ax, x, 22.4, x, 18.8)
-    node(x, 15.6, 44, 5.8, "تأیید پزشک، نوبت قطعی و اعلان بیمار", fc=GREEN_BG)
-    arrow(ax, x, 12.6, x, 9.2)
-    node(x, 6.0, 44, 5.8, "ارائه خدمت یا انقضای خودکار: انجام‌شده", fc=GREEN_BG)
-    ax.add_patch(Circle((x, 1.7), 1.7, fill=True, facecolor=INK, edgecolor=INK))
-    ax.add_patch(Circle((x, 1.7), 0.85, fill=True, facecolor=WHITE, edgecolor=INK, lw=0.4))
+    x = 50
+    ax.add_patch(plt.Circle((x, 96.5), 2.0, fill=True, facecolor=TEAL, edgecolor=TEAL))
+    down(x, 94.3, 89.2)
+    node(x, 85.5, 36, 7, "ورود و احراز هویت بیمار")
+    down(x, 81.8, 77.2)
+    node(x, 73.5, 40, 7, "جستجوی پزشک و مشاهده اسلات‌های خالی")
+    down(x, 69.8, 65.2)
+    diamond(ax, x, 61.0, 24, 8.2, "روز کاری پزشک؟")
+    arrow(ax, x - 12, 61.0, x - 28, 61.0, "خیر", text_dy=1.5, fs=9)
+    node(x - 28, 53.0, 26, 6, "انتخاب تاریخ دیگر", fc="#F1F5F9")
+    line(ax, x - 28, 49.8, x - 28, 73.5, dashed=True)
+    line(ax, x - 28, 73.5, x - 20, 73.5, dashed=True)
+    down(x, 56.7, 51.2, "بله", lx=4)
+    node(x, 47.5, 40, 7, "انتخاب ساعت از اسلات‌های خالی")
+    down(x, 43.8, 39.2)
+    diamond(ax, x, 35.0, 24, 8.2, "اسلات خالی است؟")
+    arrow(ax, x - 12, 35.0, x - 28, 35.0, "خیر", text_dy=1.5, fs=9)
+    node(x - 28, 27.0, 26, 6, "انتخاب ساعت دیگر", fc="#F1F5F9")
+    line(ax, x - 28, 23.8, x - 28, 47.5, dashed=True)
+    line(ax, x - 28, 47.5, x - 20, 47.5, dashed=True)
+    down(x, 30.7, 25.4, "بله", lx=4)
+    node(x, 21.5, 42, 7, "ثبت نوبت — وضعیت: در انتظار تأیید", fc=AMBER_BG)
+    down(x, 17.8, 13.2)
+    node(x, 9.5, 42, 7, "تأیید پزشک، قطعی، ارائه خدمت، انجام‌شده", fc=GREEN_BG)
     save(fig, "activity.png")
 
 
 # =========================================================
-# ۴) کلاس
+# ۴) کلاس — سه موجودیت + دو enum مثل گزارش آرمین
 # =========================================================
 def class_diag():
-    fig, ax = new_ax(17.4, 11.0)
-    cls_box(ax, 2, 38, 22, 50, "User", [
+    fig, ax = new_ax(15.5, 10)
+
+    def cls(ax, x, y, w, h, title, fields, fc=TEAL_BG):
+        p = Rectangle((x, y), w, h, linewidth=1.5, edgecolor=TEAL, facecolor=fc)
+        ax.add_patch(p)
+        ax.plot([x, x + w], [y + h - 7, y + h - 7], color=TEAL, lw=1.2)
+        ax.text(x + w / 2, y + h - 3.5, fa(title), ha="center", va="center",
+                fontproperties=FA_B, fontsize=11.5, color=TEAL)
+        for i, f in enumerate(fields):
+            ax.text(x + 1.5, y + h - 10.2 - i * 4.0, fa(f), ha="left", va="center",
+                    fontproperties=FA, fontsize=9.6, color=INK)
+
+    cls(ax, 3, 36, 29, 50, "User (کاربر)", [
         "- id : Long",
         "- fullName : String",
         "- email : String",
@@ -288,7 +257,7 @@ def class_diag():
         "- twoFactorEnabled : boolean",
         "- createdAt : Instant",
     ])
-    cls_box(ax, 28, 32, 24, 56, "Doctor", [
+    cls(ax, 36, 32, 30, 54, "Doctor (پزشک)", [
         "- id : Long",
         "- fullName : String",
         "- specialty : String",
@@ -300,46 +269,24 @@ def class_diag():
         "- startHour / endHour : int",
         "- userId : Long",
     ])
-    cls_box(ax, 56, 42, 20, 46, "Appointment", [
+    cls(ax, 70, 40, 27, 46, "Appointment (نوبت)", [
         "- id : Long",
         "- date : LocalDate",
         "- time : LocalTime",
-        "- status : Status",
+        "- status : AppointmentStatus",
         "- notes : String",
         "- createdAt : Instant",
     ])
-    cls_box(ax, 79, 54, 19, 34, "Review", [
-        "- id : Long",
-        "- rating : int",
-        "- comment : String",
-        "- createdAt : Instant",
-    ])
-    cls_box(ax, 79, 14, 19, 34, "Notification", [
-        "- id : Long",
-        "- title : String",
-        "- message : String",
-        "- type : String",
-        "- read : boolean",
-        "- createdAt : Instant",
-    ])
-    cls_box(ax, 2, 8, 22, 22, "Role", ["PATIENT", "DOCTOR", "ADMIN"],
-            stereotype="«enum»", fc=AMBER_BG)
-    cls_box(ax, 56, 8, 20, 26, "AppointmentStatus",
-            ["PENDING", "CONFIRMED", "COMPLETED", "CANCELED"],
-            stereotype="«enum»", fc=AMBER_BG)
+    cls(ax, 3, 6, 29, 20, "«enum» Role", ["PATIENT", "DOCTOR", "ADMIN"], fc=AMBER_BG)
+    cls(ax, 70, 6, 27, 24, "«enum» AppointmentStatus",
+        ["PENDING", "CONFIRMED", "COMPLETED", "CANCELED"], fc=AMBER_BG)
 
-    ax.plot([24, 28], [58, 58], color=SLATE, lw=1.25)
-    ax.text(26, 60.4, fa("1 — 0..1"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([52, 56], [58, 58], color=SLATE, lw=1.25)
-    ax.text(54, 60.4, fa("1 — *"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([76, 79], [70, 70], color=SLATE, lw=1.25)
-    ax.text(77.5, 72.2, fa("1 — *"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([13, 13], [38, 30], color="#94A3B8", lw=1.0, linestyle=":")
-    ax.plot([66, 66], [42, 34], color="#94A3B8", lw=1.0, linestyle=":")
-    ax.text(13, 34, fa("نقش"), ha="center", fontproperties=FA, fontsize=7.5, color="#64748B")
+    ax.plot([32, 36], [62, 62], color=SLATE, lw=1.3)
+    ax.text(34, 88.6, fa("1 — 0..1 حساب پزشک"), ha="center", fontproperties=FA, fontsize=8.5, color=SLATE)
+    ax.plot([66, 70], [62, 62], color=SLATE, lw=1.3)
+    ax.text(68, 88.6, fa("1 — *"), ha="center", fontproperties=FA, fontsize=8.5, color=SLATE)
+    ax.plot([17.5, 17.5], [36, 26], color="#94A3B8", lw=1.1, linestyle=":")
+    ax.plot([83.5, 83.5], [40, 30], color="#94A3B8", lw=1.1, linestyle=":")
     save(fig, "class.png")
 
 
@@ -347,7 +294,7 @@ def class_diag():
 # ۵) ER
 # =========================================================
 def er():
-    fig, ax = new_ax(16.8, 11.2)
+    fig, ax = new_ax(16, 11)
 
     def entity(x, y, w, h, title, rows):
         ax.add_patch(Rectangle((x, y), w, h, linewidth=1.4, edgecolor=TEAL, facecolor=WHITE))
@@ -355,10 +302,10 @@ def er():
         ax.text(x + w / 2, y + h - 3.5, fa(title), ha="center", va="center",
                 fontproperties=FA_B, fontsize=11, color=WHITE)
         for i, r in enumerate(rows):
-            ax.text(x + 1.4, y + h - 10.2 - i * 3.55, fa(r), ha="left", va="center",
-                    fontproperties=FA, fontsize=8.4, color=INK)
+            ax.text(x + 1.4, y + h - 10.4 - i * 3.6, fa(r), ha="left", va="center",
+                    fontproperties=FA, fontsize=8.6, color=INK)
 
-    entity(4, 48, 28, 46, "users", [
+    entity(3, 50, 27, 40, "users", [
         "PK  id",
         "    full_name",
         "UQ  email",
@@ -368,7 +315,7 @@ def er():
         "    two_factor_enabled",
         "    created_at",
     ])
-    entity(38, 42, 26, 52, "doctors", [
+    entity(37, 46, 26, 44, "doctors", [
         "PK  id",
         "    full_name",
         "    specialty",
@@ -378,92 +325,84 @@ def er():
         "    rating / review_count",
         "    available_days",
         "    start_hour / end_hour",
-        "FK  user_id  (یکتا)",
+        "FK  user_id (یکتا)",
     ])
-    entity(70, 50, 26, 44, "appointments", [
+    entity(70, 52, 27, 38, "appointments", [
         "PK  id",
-        "FK  patient_id  users",
-        "FK  doctor_id  doctors",
+        "FK  patient_id",
+        "FK  doctor_id",
         "    date , time",
         "    status",
         "    notes",
         "    created_at",
-        "UQ  (doctor_id, date, time)",
+        "UQ (doctor_id, date, time)",
     ])
-    entity(38, 4, 26, 30, "reviews", [
+    entity(37, 6, 26, 26, "reviews", [
         "PK  id",
-        "FK  patient_id",
-        "FK  doctor_id",
+        "FK  patient_id / doctor_id",
         "    rating (1..5)",
         "    comment",
-        "UQ  (patient_id, doctor_id)",
+        "UQ (patient_id, doctor_id)",
     ])
-    entity(70, 8, 26, 32, "notifications", [
+    entity(70, 6, 27, 32, "notifications", [
         "PK  id",
-        "FK  user_id  users",
+        "FK  user_id",
         "    title , message",
         "    type",
         "    is_read",
         "    created_at",
     ])
-
-    ax.plot([32, 38], [72, 72], color=SLATE, lw=1.25)
-    ax.text(35, 74.2, fa("1 — 0..1 حساب"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([64, 70], [72, 72], color=SLATE, lw=1.25)
-    ax.text(67, 74.2, fa("1 — * پزشک"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([18, 18], [94, 97], color=SLATE, lw=1.25)
-    ax.plot([18, 83], [97, 97], color=SLATE, lw=1.25)
-    ax.plot([83, 83], [97, 94], color=SLATE, lw=1.25)
-    ax.text(50, 98.6, fa("1 بیمار — * نوبت"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([51, 51], [42, 34], color=SLATE, lw=1.25)
-    ax.text(54.5, 38, fa("1 — * نظر"), ha="left", fontproperties=FA, fontsize=8, color=SLATE)
-
-    ax.plot([18, 18], [48, 20], color=SLATE, lw=1.15)
-    ax.plot([18, 70], [20, 20], color=SLATE, lw=1.15)
-    ax.text(44, 21.8, fa("1 — * اعلان"), ha="center", fontproperties=FA, fontsize=8, color=SLATE)
+    ax.plot([30, 37], [72, 72], color=SLATE, lw=1.25)
+    ax.text(33.5, 94, fa("1 — 0..1 حساب پزشک"), ha="center", fontproperties=FA, fontsize=8.5, color=SLATE)
+    ax.plot([63, 70], [72, 72], color=SLATE, lw=1.25)
+    ax.text(66.5, 94, fa("1 — * نوبت"), ha="center", fontproperties=FA, fontsize=8.5, color=SLATE)
+    ax.plot([50, 50], [46, 32], color=SLATE, lw=1.25)
+    ax.text(52.2, 39, fa("1 — * نظر"), ha="left", fontproperties=FA, fontsize=8.5, color=SLATE)
+    # مسیر اعلان: از زیر users، دور reviews، به notifications
+    ax.plot([16.5, 16.5], [50, 2.0], color=SLATE, lw=1.15)
+    ax.plot([16.5, 70], [2.0, 2.0], color=SLATE, lw=1.15)
+    ax.plot([70, 70], [2.0, 10], color=SLATE, lw=1.15)
+    ax.text(22, 3.6, fa("1 — * اعلان"), ha="left", fontproperties=FA, fontsize=8.5, color=SLATE)
     save(fig, "er.png")
 
 
-# =========================================================
-# ۶) معماری
-# =========================================================
 def architecture():
-    fig, ax = new_ax(16.4, 8.6)
+    fig, ax = new_ax(16, 8.4)
     layers = [
-        (6, 72, 88, 18, "لایه ارائه — اپلیکیشن اندروید (Java، Material 3، Retrofit، سایدبار نقش‌محور)", TEAL_BG),
-        (6, 50, 88, 16, "لایه API — REST + JWT + RBAC  |  Spring Security  |  Swagger", "#D9F1ED"),
-        (6, 28, 56, 16, "لایه کسب‌وکار — Auth / OTP / Appointment / Review / Notification / Doctor", AMBER_BG),
-        (64, 28, 30, 16, "زمان‌بند انقضا + SMTP جیمیل", "#FEF9C3"),
-        (6, 6, 88, 16, "لایه داده — Spring Data JPA / Hibernate  →  PostgreSQL", GREEN_BG),
+        (6, 74, 88, 16, "لایه ارائه — اپلیکیشن اندروید (Java، Material 3، Retrofit)", TEAL_BG),
+        (6, 52, 88, 16, "لایه API — REST + JWT + RBAC  |  Spring Security  |  Swagger", "#D9F1ED"),
+        (6, 30, 56, 16, "لایه کسب‌وکار — Auth / OTP / Appointment / Review / Notification", AMBER_BG),
+        (64, 30, 30, 16, "زمان‌بند انقضا + SMTP جیمیل", "#FEF9C3"),
+        (6, 8, 88, 16, "لایه داده — Spring Data JPA / Hibernate / PostgreSQL", GREEN_BG),
     ]
     for x, y, w, h, t, fc in layers:
-        box(ax, x, y, w, h, t, fc=fc, fs=10.5, radius=1.2)
-    for y in (72, 50, 28):
-        arrow(ax, 50, y, 50, y - 4.2, color=TEAL)
-    ax.text(50, 96.2, fa("معماری لایه‌ای سامانه بدوکی"), ha="center",
+        box(ax, x, y, w, h, t, fc=fc, fs=10.5)
+    arrow(ax, 50, 73.6, 50, 68.4)
+    arrow(ax, 50, 51.6, 50, 46.4)
+    arrow(ax, 50, 29.6, 50, 24.4)
+    ax.text(50, 96, fa("معماری لایه‌ای سامانه بدوکی"), ha="center",
             fontproperties=FA_B, fontsize=13, color=TEAL)
     save(fig, "architecture.png")
+
+
+# ===========================    save(fig, "architecture.png")
 
 
 # =========================================================
 # ۷) وضعیت نوبت
 # =========================================================
 def state():
-    fig, ax = new_ax(15.6, 7.4)
-    box(ax, 6, 38, 20, 16, "PENDING\nدر انتظار تأیید", fc=AMBER_BG, ec=AMBER, fs=11, bold=True)
-    box(ax, 40, 38, 20, 16, "CONFIRMED\nقطعی", fc=GREEN_BG, ec=GREEN, fs=11, bold=True)
-    box(ax, 74, 38, 20, 16, "COMPLETED\nانجام‌شده", fc="#DBEAFE", ec="#1D4ED8", fs=11, bold=True)
-    box(ax, 40, 8, 20, 14, "CANCELED\nلغو / منقضی", fc=RED_BG, ec=RED, fs=11, bold=True)
-    ax.add_patch(Circle((3.0, 46), 1.35, fill=True, facecolor=TEAL, edgecolor=TEAL))
-    arrow(ax, 4.4, 46, 6.0, 46, color=TEAL)
-
-    arrow(ax, 26, 46, 40, 46, "تأیید پزشک", fs=8.5, text_dy=1.5)
-    arrow(ax, 60, 46, 74, 46, "ویزیت / انقضای قطعی", fs=8.5, text_dy=1.5)
-    arrow(ax, 16, 38, 40, 22, "لغو یا عدم تأیید تا تاریخ", fs=8.2, text_dx=-4, text_dy=-0.2)
-    arrow(ax, 50, 38, 50, 22, "لغو پزشک / بیمار", fs=8.2, text_dx=8)
+    fig, ax = new_ax(15.6, 7.2)
+    box(ax, 6, 40, 22, 16, "PENDING\nدر انتظار تأیید", fc=AMBER_BG, ec=AMBER, fs=11, bold=True)
+    box(ax, 40, 40, 22, 16, "CONFIRMED\nقطعی", fc=GREEN_BG, ec=GREEN, fs=11, bold=True)
+    box(ax, 74, 40, 22, 16, "COMPLETED\nانجام‌شده", fc="#DBEAFE", ec="#1D4ED8", fs=11, bold=True)
+    box(ax, 40, 8, 22, 14, "CANCELED\nلغو / منقضی", fc=RED_BG, ec=RED, fs=11, bold=True)
+    ax.add_patch(Circle((3.2, 48), 1.4, fill=True, facecolor=TEAL, edgecolor=TEAL))
+    arrow(ax, 4.7, 48, 6.0, 48)
+    arrow(ax, 28, 48, 40, 48, "تأیید پزشک", fs=8.5, text_dy=1.5)
+    arrow(ax, 62, 48, 74, 48, "ویزیت / انقضای قطعی", fs=8.5, text_dy=1.5)
+    arrow(ax, 17, 40, 40, 22, "لغو یا عدم تأیید تا تاریخ", fs=8.2, text_dx=-3, text_dy=-0.4)
+    arrow(ax, 51, 40, 51, 22, "لغو پزشک / بیمار", fs=8.2, text_dx=9)
     save(fig, "state.png")
 
 

@@ -1,0 +1,13 @@
+@startuml
+skinparam shadowing false
+rectangle "(Java، Material 3، Retrofit) ﺪﯾﻭﺭﺪﻧﺍ ﻦﺸﯿﮑﯿﻠﭘﺍ — ﻪﺋﺍﺭﺍ ﻪﯾﻻ" as UI
+rectangle "API — REST + JWT + RBAC | Spring Security | Swagger ﻪﯾﻻ" as API
+rectangle "Auth / OTP / Appointment / Review / Notification — ﺭﺎﮐﻭﺐﺴﮐ ﻪﯾﻻ" as SVC
+rectangle "ﻞﯿﻤﯿﺟ SMTP + ﺎﻀﻘﻧﺍ ﺪﻨﺑﻥﺎﻣﺯ" as JOB
+rectangle "Spring Data JPA / Hibernate / PostgreSQL — ﻩﺩﺍﺩ ﻪﯾﻻ" as DATA
+UI --> API
+API --> SVC
+API --> JOB
+SVC --> DATA
+JOB --> DATA
+@enduml

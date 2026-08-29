@@ -1,64 +1,64 @@
 @startuml
-skinparam defaultFontName "Vazirmatn"
-entity "users" as users {
+skinparam shadowing false
+entity users {
   * id : BIGINT <<PK>>
   --
-  * full_name
-  * email <<UNIQUE>>
-  * phone
-  * password_hash
-  * role
-  * two_factor_enabled
-  * created_at
+  full_name
+  * email <<UQ>>
+  phone
+  password_hash
+  role
+  two_factor_enabled
+  created_at
 }
-entity "doctors" as doctors {
+entity doctors {
   * id : BIGINT <<PK>>
   --
-  * full_name
-  * specialty
-  * city
-  * hospital_name
-  * visit_price
-  * rating
-  * available_days
-  * user_id <<FK, UNIQUE>>
+  full_name
+  specialty
+  city
+  hospital_name
+  visit_price
+  rating / review_count
+  available_days
+  start_hour / end_hour
+  user_id <<FK,UQ>>
 }
-entity "appointments" as appointments {
+entity appointments {
   * id : BIGINT <<PK>>
   --
-  * patient_id <<FK>>
-  * doctor_id <<FK>>
-  * date
-  * time
-  * status
-  * notes
-  --
-  * UNIQUE (doctor_id, date, time)
+  patient_id <<FK>>
+  doctor_id <<FK>>
+  date
+  time
+  status
+  notes
+  created_at
+  <<UQ (doctor_id, date, time)>>
 }
-entity "reviews" as reviews {
+entity reviews {
   * id : BIGINT <<PK>>
   --
-  * patient_id <<FK>>
-  * doctor_id <<FK>>
-  * rating
-  * comment
-  --
-  * UNIQUE (patient_id, doctor_id)
+  patient_id <<FK>>
+  doctor_id <<FK>>
+  rating
+  comment
+  <<UQ (patient_id, doctor_id)>>
 }
-entity "notifications" as notifications {
+entity notifications {
   * id : BIGINT <<PK>>
   --
-  * user_id <<FK>>
-  * title
-  * message
-  * type
-  * is_read
-  * created_at
+  user_id <<FK>>
+  title
+  message
+  type
+  is_read
+  created_at
 }
 users ||--o| doctors
-users ||--o{ appointments
 doctors ||--o{ appointments
-users ||--o{ reviews
+users ||--o{ appointments
 doctors ||--o{ reviews
+users ||--o{ reviews
 users ||--o{ notifications
 @enduml
