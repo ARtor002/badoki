@@ -11,6 +11,7 @@ import ir.artor.badoki.model.AppointmentStatus;
 import ir.artor.badoki.model.Doctor;
 import ir.artor.badoki.model.User;
 import ir.artor.badoki.repository.AppointmentRepository;
+import ir.artor.badoki.util.Jalali;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,7 +114,7 @@ public class AppointmentService {
 
         // اطلاع‌رسانی به پزشک
         notificationService.notifyUser(a.getDoctor().getUserId(), "لغو نوبت توسط بیمار",
-                "بیمار «" + user.getFullName() + "» نوبت " + a.getDate() + " ساعت " + a.getTime()
+                "بیمار «" + user.getFullName() + "» نوبت " + Jalali.formatSlot(a.getDate(), a.getTime())
                         + " را لغو کرد.",
                 "APPOINTMENT_CANCELED");
         return AppointmentResponse.from(a);
@@ -202,13 +203,15 @@ public class AppointmentService {
         Long doctorUserId = a.getDoctor().getUserId();
         if (target == AppointmentStatus.CANCELED) {
             notificationService.notifyUser(a.getPatient().getId(), "لغو نوبت توسط پزشک",
-                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
-                            + " ساعت " + a.getTime() + " توسط پزشک لغو شد.",
+                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                            + Jalali.formatSlot(a.getDate(), a.getTime())
+                            + " توسط پزشک لغو شد.",
                     "APPOINTMENT_CANCELED");
         } else if (target == AppointmentStatus.CONFIRMED) {
             notificationService.notifyUser(a.getPatient().getId(), "تأیید نوبت",
-                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
-                            + " ساعت " + a.getTime() + " توسط پزشک تأیید شد.",
+                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                            + Jalali.formatSlot(a.getDate(), a.getTime())
+                            + " توسط پزشک تأیید شد.",
                     "APPOINTMENT_CONFIRMED");
         }
         return AppointmentResponse.from(a);
@@ -265,13 +268,15 @@ public class AppointmentService {
             if (a.getStatus() == AppointmentStatus.PENDING) {
                 a.setStatus(AppointmentStatus.CANCELED);
                 notificationService.notifyUser(a.getPatient().getId(), "انقضای نوبت",
-                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                                + Jalali.format(a.getDate())
                                 + " به دلیل عدم تأیید توسط پزشک منقضی شد.",
                         "APPOINTMENT_EXPIRED");
             } else if (a.getStatus() == AppointmentStatus.CONFIRMED) {
                 a.setStatus(AppointmentStatus.COMPLETED);
                 notificationService.notifyUser(a.getPatient().getId(), "پایان نوبت",
-                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                                + Jalali.format(a.getDate())
                                 + " به پایان رسید.",
                         "APPOINTMENT_COMPLETED");
             }

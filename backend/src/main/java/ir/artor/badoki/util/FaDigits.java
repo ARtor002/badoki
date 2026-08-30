@@ -19,4 +19,19 @@ public final class FaDigits {
         }
         return sb.toString();
     }
+
+    private static final char[] FA = {'۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'};
+
+    public static String toFa(String s) {
+        if (s == null) return "";
+        StringBuilder sb = new StringBuilder(s.length());
+        for (char c : s.toCharArray()) {
+            if (c >= '0' && c <= '9') {
+                sb.append(FA[c - '0']);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
 }

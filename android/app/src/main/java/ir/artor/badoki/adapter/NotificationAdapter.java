@@ -13,12 +13,11 @@ import ir.artor.badoki.R;
 import ir.artor.badoki.api.Models;
 import ir.artor.badoki.util.Fmt;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** آداپتور مرکز اطلاع‌رسانی */
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.VH> {
@@ -26,6 +25,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public interface Listener {
         void onClick(Models.Notification notification);
     }
+
+    private static final Pattern ISO_DATE = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 
     private final List<Models.Notification> items = new ArrayList<>();
     private final Listener listener;
@@ -52,8 +53,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull VH holder, int position) {
         Models.Notification n = items.get(position);
         holder.title.setText(n.title);
-        holder.message.setText(n.message);
-        holder.time.setText(formatTime(n.createdAt));
+        holder.message.setText(formatMessage(n.message));
+        holder.time.setText(Fmt.dateTimeJalali(n.createdAt));
 
         // آیکون و رنگ بر اساس نوع
         int iconRes, colorRes;
@@ -93,14 +94,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         });
     }
 
-    private String formatTime(String iso) {
-        try {
-            LocalDateTime dt = LocalDateTime.ofInstant(
-                    Instant.parse(iso), ZoneId.systemDefault());
-            return Fmt.fa(dt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
-        } catch (Exception e) {
-            return "";
+    /** تاریخ میلادی داخل متن اعلان‌های قدیمی را به شمسی برمی‌گرداند */
+    private String formatMessage(String msg) {
+        if (msg == null || msg.isEmpty()) return "";
+        Matcher m = ISO_DATE.matcher(msg);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            LocalDate g = Fmt.parseIso(m.group());
+            String jalali = g == null ? m.group() : Fmt.dateNumeric(g);
+            m.appendReplacement(sb, Matcher.quoteReplacement(jalali));
         }
+        m.appendTail(sb);
+        return Fmt.faDigits(sb.toString());
     }
 
     @Override
