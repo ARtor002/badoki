@@ -2,8 +2,8 @@
 
 آخرین به‌روزرسانی: ۲۰۲۶-۰۸-۳۰
 
-<<<<<<< HEAD
-=======
+اگر چت قطع شد، همین فایل را به چت بعدی بده.
+
 ---
 
 ## تاریخ شمسی در اعلان‌ها
@@ -15,12 +15,9 @@
 
 اعلان‌های قدیمی هم در کلاینت با regex روی `yyyy-MM-dd` شمسی می‌شوند.
 
->>>>>>> 25ff311 (fix: نمایش تاریخ شمسی در اعلان‌ها)
-اگر چت قطع شد، همین فایل را به چت بعدی بده.
-
 ---
 
-## گزارش کامل (همین مرحله)
+## گزارش کامل
 
 فایل ورد برای دانلود (هر دو یکی هستند):
 
@@ -31,9 +28,9 @@
 
 اسکریپت‌ها:
 
-- `report/make_diagrams.py` — matplotlib با چیدمان گزارش آرمین (۳ ستون مواردکاربرد، ۳ خط‌عمر توالی، لوزی فعالیت، کلاس+enum). `fa()` در matplotlib همان متن خام است چون reshape متن را خراب می‌کند.
-- `report/make_plantuml.py` — منابع PlantUML با reshape+bidi (برای رندر خارجی).
-- `report/make_report.py` — شش فصل؛ B Nazanin ۱۳، فاصله ۱٫۳۵، حاشیه ۲٫۵ از هر چهار طرف، شرح جدول و شکل پایین.
+- `report/make_diagrams.py` — matplotlib با چیدمان گزارش آرمین. `fa()` در matplotlib همان متن خام است.
+- `report/make_plantuml.py` — منابع PlantUML با reshape+bidi.
+- `report/make_report.py` — شش فصل؛ B Nazanin ۱۳، فاصله ۱٫۳۵، حاشیه ۲٫۵ از هر چهار طرف.
 
 بازتولید:
 
@@ -43,9 +40,7 @@
 .venv-report/bin/python report/make_report.py
 ```
 
-نام دانشجو در جلد: آرمین ترکمندی — شماره دانشجویی، استاد و دانشگاه را در صفحه عنوان پر کنید.
-
-Java/PlantUML JAR در این محیط نیست؛ PNGها از matplotlib ساخته می‌شوند.
+نام دانشجو در جلد: آرمین ترکمندی
 
 ---
 
@@ -53,7 +48,7 @@ Java/PlantUML JAR در این محیط نیست؛ PNGها از matplotlib ساخ
 
 - بک‌اند Spring Boot + PostgreSQL، اندروید Java، پکیج `ir.artor.badoki`
 - نقش‌ها: PATIENT / DOCTOR / ADMIN
-- جستجوی پزشک: تخصص + شهر + بیمارستان (AND) — باگ `metaLoaded` درست شده
+- جستجوی پزشک: تخصص + شهر + بیمارستان (AND)
 - OTP ایمیل، انقضای نوبت، اطلاع‌رسانی، نظر، آموزش
 
 حساب نمونه: ali@example.com / 123456 — doctor@example.com / 123456 — admin@badoki.ir / admin123
