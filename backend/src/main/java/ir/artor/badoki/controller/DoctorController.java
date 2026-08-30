@@ -24,9 +24,10 @@ public class DoctorController {
     public PagedResponse<DoctorResponse> list(@RequestParam(required = false) String query,
                                               @RequestParam(required = false) String specialty,
                                               @RequestParam(required = false) String city,
+                                              @RequestParam(required = false) String hospital,
                                               @RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "20") int size) {
-        return doctorService.search(query, specialty, city, page, size);
+        return doctorService.search(query, specialty, city, hospital, page, size);
     }
 
     @GetMapping("/doctors/{id}")
@@ -48,5 +49,10 @@ public class DoctorController {
     @GetMapping("/meta/cities")
     public List<String> cities() {
         return doctorService.cities();
+    }
+
+    @GetMapping("/meta/hospitals")
+    public List<String> hospitals() {
+        return doctorService.hospitals();
     }
 }

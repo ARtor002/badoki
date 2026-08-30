@@ -73,4 +73,35 @@
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">@color/primary</item>
     </style>
+
+    <!-- برچسب ردیف فیلتر پزشکان -->
+    <style name="FilterRowLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/onSurfaceVariant</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- تراشه فیلتر (تخصص / شهر / بیمارستان) -->
+    <style name="Widget.Badoki.FilterChip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipMinHeight">32dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="chipBackgroundColor">@color/filter_chip_bg</item>
+        <item name="android:textColor">@color/filter_chip_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="FilterChipStyle" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipMinHeight">32dp</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="checkedIconVisible">false</item>
+    </style>
+
 </resources>

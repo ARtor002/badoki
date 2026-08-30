@@ -16,14 +16,20 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     @Query("""
         select d from Doctor d
-        where (:q is null or lower(d.fullName) like concat('%', lower(cast(:q as text)), '%'))
+        where (:q is null
+               or lower(d.fullName) like concat('%', lower(cast(:q as text)), '%')
+               or lower(d.specialty) like concat('%', lower(cast(:q as text)), '%')
+               or lower(d.city) like concat('%', lower(cast(:q as text)), '%')
+               or lower(coalesce(d.hospitalName, '')) like concat('%', lower(cast(:q as text)), '%'))
           and (:specialty is null or d.specialty = cast(:specialty as text))
           and (:city is null or d.city = cast(:city as text))
+          and (:hospital is null or d.hospitalName = cast(:hospital as text))
         order by d.rating desc, d.id asc
         """)
     Page<Doctor> search(@Param("q") String q,
                         @Param("specialty") String specialty,
                         @Param("city") String city,
+                        @Param("hospital") String hospital,
                         Pageable pageable);
 
     @Query("select distinct d.specialty from Doctor d order by d.specialty")
@@ -31,6 +37,13 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     @Query("select distinct d.city from Doctor d order by d.city")
     List<String> findDistinctCities();
+
+    @Query("""
+        select distinct d.hospitalName from Doctor d
+        where d.hospitalName is not null and d.hospitalName <> ''
+        order by d.hospitalName
+        """)
+    List<String> findDistinctHospitals();
 
     Optional<Doctor> findByUserId(Long userId);
 

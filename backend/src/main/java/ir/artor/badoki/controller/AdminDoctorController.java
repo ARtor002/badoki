@@ -23,7 +23,7 @@ public class AdminDoctorController {
 
     @GetMapping
     public List<DoctorResponse> findAll() {
-        return doctorService.search(null, null, null, 0, 200).getItems();
+        return doctorService.search(null, null, null, null, 0, 200).getItems();
     }
 
     @PostMapping

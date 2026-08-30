@@ -91,7 +91,7 @@ public class DashboardFragment extends Fragment {
     private void load() {
         showState("loading");
         Call<Models.Dashboard> dashCall = BadokiApp.api().dashboard();
-        Call<Models.DoctorsPage> topCall = BadokiApp.api().doctors(null, null, null, 0, 5);
+        Call<Models.DoctorsPage> topCall = BadokiApp.api().doctors(null, null, null, null, 0, 5);
 
         dashCall.enqueue(new Callback<Models.Dashboard>() {
             @Override
