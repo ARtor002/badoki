@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import ir.artor.badoki.AuthActivity;
 import ir.artor.badoki.BadokiApp;
@@ -31,6 +32,7 @@ public class ForgotPasswordFragment extends Fragment {
     private Button sendBtn, resetBtn;
     private TextView errorText, hintText, stepHint;
     private final LoadingDialog loadingDialog = new LoadingDialog();
+    private TextInputLayout til;
 
     @Nullable
     @Override
@@ -41,6 +43,7 @@ public class ForgotPasswordFragment extends Fragment {
         emailField = root.findViewById(R.id.fp_email);
         codeField = root.findViewById(R.id.fp_code);
         passwordField = root.findViewById(R.id.fp_password);
+        til = root.findViewById(R.id.TiL);
         sendBtn = root.findViewById(R.id.fp_send);
         resetBtn = root.findViewById(R.id.fp_reset);
         errorText = root.findViewById(R.id.fp_error);
@@ -71,6 +74,7 @@ public class ForgotPasswordFragment extends Fragment {
                     loadingDialog.dismiss();
                     if (response.isSuccessful() && response.body() != null) {
                         codeField.setVisibility(View.VISIBLE);
+                        til.setVisibility(View.VISIBLE);
                         passwordField.setVisibility(View.VISIBLE);
                         resetBtn.setVisibility(View.VISIBLE);
                         stepHint.setVisibility(View.VISIBLE);
