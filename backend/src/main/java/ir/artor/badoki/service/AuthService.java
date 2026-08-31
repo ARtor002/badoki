@@ -36,10 +36,10 @@ public class AuthService {
     /** گام ۱: ارسال کد تأیید به ایمیل */
     public OtpResponse sendRegisterOtp(String rawEmail) {
         String email = normalizeEmail(rawEmail);
-        if (userRepository.existsByEmail(email)) {
-            throw new ApiException(HttpStatus.CONFLICT, "این ایمیل قبلاً ثبت شده است. وارد شوید.");
-        }
-        String code = otpService.send(email, OtpPurpose.REGISTER);
+        OtpPurpose purpose = userRepository.existsByEmail(email)
+                ? OtpPurpose.LOGIN      // ایمیل موجود → کد ورود (برای ارسال مجدد در ورود)
+                : OtpPurpose.REGISTER;  // ایمیل تازه → کد ثبتنام
+        String code = otpService.send(email, purpose);
         return new OtpResponse("کد تأیید به ایمیل شما ارسال شد", otpService.devCodeOrNull(code));
     }
 

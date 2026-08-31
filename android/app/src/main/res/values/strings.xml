@@ -36,7 +36,7 @@
     <string name="password_hint">رمز عبور</string>
     <string name="password_confirm_hint">تکرار رمز عبور</string>
     <string name="fullname_hint">نام و نام خانوادگی</string>
-    <string name="phone_hint">شماره موبایل (۰۹…)…</string>
+    <string name="phone_hint">شماره موبایل با ۰۹</string>
     <string name="no_account">حساب ندارید؟ ثبت‌نام کنید</string>
     <string name="have_account">قبلاً ثبت‌نام کرده‌اید؟ وارد شوید</string>
     <string name="demo_hint"></string>

@@ -142,6 +142,15 @@ public class OtpFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null && response.body().token != null) {
                     SessionManager.saveLogin(response.body());
                     ((AuthActivity) requireActivity()).openMain();
+                } else if (response.code() == 409) {
+                    // حساب قبلاً ساخته شده است؛ کاربر را به ورود هدایت کن
+                    errorText.setText("حساب قبلاً ساخته شده است");
+                    errorText.setVisibility(View.VISIBLE);
+                    verifyBtn.postDelayed(() -> {
+                        if (isAdded()) {
+                            ((AuthActivity) requireActivity()).showLogin();
+                        }
+                    }, 1500);
                 } else {
                     errorText.setText(ApiClient.errorMessage(new retrofit2.HttpException(response)));
                     errorText.setVisibility(View.VISIBLE);
@@ -160,13 +169,8 @@ public class OtpFragment extends Fragment {
     private void resend() {
         resendBtn.setEnabled(false);
         loadingDialog.show(requireContext(), getString(R.string.loading_sending_otp));
-        // فقط حالت REGISTER امکان ارسال مجدد دارد؛ در LOGIN باید دوباره لاگین کرد
-        if (!MODE_REGISTER.equals(mode)) {
-            resendBtn.setEnabled(true);
-            errorText.setText(R.string.otp_login_resend);
-            errorText.setVisibility(View.VISIBLE);
-            return;
-        }
+        // ارسال مجدد برای ثبت‌نام و ورود هر دو از همین اندپوینت استفاده می‌شود؛
+        // سرور بر اساس وجود ایمیل، کد REGISTER یا LOGIN صادر می‌کند
         Models.EmailRequest req = new Models.EmailRequest();
         req.email = email;
         BadokiApp.api().sendRegisterOtp(req).enqueue(new Callback<Models.OtpResponse>() {
@@ -176,6 +180,8 @@ public class OtpFragment extends Fragment {
                 resendBtn.setEnabled(true);
                 loadingDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
+                    // پاک کردن کد قبلی تا کاربر کد قدیمی را ارسال نکند
+                    if (codeField != null) codeField.setText("");
                     if (response.body().devOtp != null && !response.body().devOtp.isEmpty()) {
                         hintText.setText(getString(R.string.otp_dev_hint) + " " + response.body().devOtp);
                         hintText.setVisibility(View.VISIBLE);
