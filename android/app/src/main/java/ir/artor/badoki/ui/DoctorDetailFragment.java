@@ -30,6 +30,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
@@ -286,6 +287,8 @@ public class DoctorDetailFragment extends Fragment {
         slotsChips.removeAllViews();
         slotsChips.setSingleSelection(true);
         boolean anyAvailable = false;
+        boolean isToday = LocalDate.now().equals(selectedDate);
+        LocalTime now = LocalTime.now();
         for (Models.Slot slot : slotList) {
             Chip chip = new Chip(requireContext());
             // نمایش با ارقام فارسی، اما مقدار اصلی (لاتین) در tag نگه داشته می‌شود
@@ -293,8 +296,10 @@ public class DoctorDetailFragment extends Fragment {
             chip.setTag(slot.time);
             chip.setCheckable(true);
             chip.setCheckedIconVisible(false);
-            chip.setEnabled(slot.available);
-            if (slot.available) anyAvailable = true;
+            // اسلات‌های گذشته امروز هم غیرفعال‌اند
+            boolean passed = isToday && LocalTime.parse(slot.time).isBefore(now);
+            chip.setEnabled(slot.available && !passed);
+            if (slot.available && !passed) anyAvailable = true;
             slotsChips.addView(chip);
         }
         slotsChips.setVisibility(View.VISIBLE);
@@ -388,8 +393,10 @@ public class DoctorDetailFragment extends Fragment {
 
     private void onBookClicked() {
         if (doctor == null || selectedDate == null || selectedTime == null) return;
-        BookSheet.newInstance(doctor, selectedDate.format(ISO), selectedTime)
-                .show(getChildFragmentManager(), "book");
+        BookSheet sheet = BookSheet.newInstance(doctor, selectedDate.format(ISO), selectedTime);
+        // نتیجه رزرو از طریق callback دریافت می‌شود (مقاوم در برابر بسته‌شدن شیت)
+        sheet.setListener(bookedAgain -> onBookResult(bookedAgain));
+        sheet.show(getChildFragmentManager(), "book");
     }
 
     /** بعد از رزور موفق یا رزرو دوباره */

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.Models;
 import ir.artor.badoki.util.Fmt;
+import ir.artor.badoki.util.Jalali;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -97,7 +98,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         try {
             LocalDateTime dt = LocalDateTime.ofInstant(
                     Instant.parse(iso), ZoneId.systemDefault());
-            return Fmt.fa(dt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
+            Jalali.JDate j = Jalali.toJalali(dt.toLocalDate());
+            String date = String.format("%04d/%02d/%02d", j.jy, j.jm, j.jd);
+            String clock = String.format("%02d:%02d", dt.getHour(), dt.getMinute());
+            return Fmt.fa(date + " — " + clock);
         } catch (Exception e) {
             return "";
         }

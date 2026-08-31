@@ -96,8 +96,11 @@ public class DoctorService {
         List<SlotDto> slots = new ArrayList<>();
         LocalTime t = LocalTime.of(doctor.getStartHour(), 0);
         LocalTime end = LocalTime.of(doctor.getEndHour(), 0);
+        LocalTime now = LocalTime.now();
+        boolean isToday = date.equals(LocalDate.now());
         while (t.isBefore(end)) {
-            slots.add(new SlotDto(t.toString(), !booked.contains(t)));
+            boolean available = !booked.contains(t) && !(isToday && !t.isAfter(now));
+            slots.add(new SlotDto(t.toString(), available));
             t = t.plusMinutes(doctor.getSlotMinutes());
         }
         return slots;

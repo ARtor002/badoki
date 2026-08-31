@@ -11,6 +11,7 @@ import ir.artor.badoki.model.AppointmentStatus;
 import ir.artor.badoki.model.Doctor;
 import ir.artor.badoki.model.User;
 import ir.artor.badoki.repository.AppointmentRepository;
+import ir.artor.badoki.util.Jalali;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -202,13 +203,15 @@ public class AppointmentService {
         Long doctorUserId = a.getDoctor().getUserId();
         if (target == AppointmentStatus.CANCELED) {
             notificationService.notifyUser(a.getPatient().getId(), "لغو نوبت توسط پزشک",
-                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
-                            + " ساعت " + a.getTime() + " توسط پزشک لغو شد.",
+                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                            + Jalali.faDate(a.getDate()) + " ساعت " + Jalali.faTime(a.getTime())
+                            + " توسط پزشک لغو شد.",
                     "APPOINTMENT_CANCELED");
         } else if (target == AppointmentStatus.CONFIRMED) {
             notificationService.notifyUser(a.getPatient().getId(), "تأیید نوبت",
-                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
-                            + " ساعت " + a.getTime() + " توسط پزشک تأیید شد.",
+                    "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                            + Jalali.faDate(a.getDate()) + " ساعت " + Jalali.faTime(a.getTime())
+                            + " توسط پزشک تأیید شد.",
                     "APPOINTMENT_CONFIRMED");
         }
         return AppointmentResponse.from(a);
@@ -282,11 +285,15 @@ public class AppointmentService {
     // ---------- ابزارها ----------
 
     private void validateSlot(Doctor doctor, LocalDate date, LocalTime time, Appointment self) {
+        LocalDate today = LocalDate.now();
         if (date.isBefore(LocalDate.now())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "تاریخ انتخابی در گذشته است");
         }
         if (date.isAfter(LocalDate.now().plusDays(30))) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "رزرو فقط تا ۳۰ روز آینده ممکن است");
+        }
+        if (date.equals(today) && time.isBefore(LocalTime.now())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "ساعت انتخابی گذشته است؛ زمان دیگری انتخاب کنید");
         }
         if (!doctor.availableOn(date)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "پزشک در این روز ویزیت ندارد");

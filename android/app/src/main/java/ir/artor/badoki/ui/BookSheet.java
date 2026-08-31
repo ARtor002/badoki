@@ -29,9 +29,20 @@ public class BookSheet extends BottomSheetDialogFragment {
     private static final String ARG_DATE = "date";
     private static final String ARG_TIME = "time";
 
+    /** فراخوانی نتیجه رزرو — به state فرگمنت وابسته نیست و همیشه کار می‌کند */
+    public interface Listener {
+        /** bookedAgain=true یعنی «رزرو نوبت دیگر»، false یعنی «مشاهده نوبت‌های من» */
+        void onResult(boolean bookedAgain);
+    }
+
     private Models.Doctor doctor;
     private String date;
     private String time;
+    private Listener listener;
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
 
     public static BookSheet newInstance(Models.Doctor doctor, String date, String time) {
         BookSheet sheet = new BookSheet();
@@ -122,24 +133,13 @@ public class BookSheet extends BottomSheetDialogFragment {
                 .setCancelable(false)
                 .setPositiveButton(R.string.book_view_appointments, (d, w) -> {
                     d.dismiss();
-                    notifyDetail(true);
+                    if (listener != null) listener.onResult(false); // مشاهده نوبت‌های من
                 })
                 .setNegativeButton(R.string.book_another, (d, w) -> {
                     d.dismiss();
-                    notifyDetail(false);
+                    if (listener != null) listener.onResult(true);  // رزرو نوبت دیگر
                 })
                 .create();
         dialog.show();
-    }
-
-    private void notifyDetail(boolean goToAppointments) {
-        androidx.fragment.app.Fragment parent = getParentFragment();
-        if (parent instanceof DoctorDetailFragment) {
-            ((DoctorDetailFragment) parent).onBookResult(!goToAppointments);
-        } else if (getActivity() instanceof ir.artor.badoki.MainActivity) {
-            ((ir.artor.badoki.MainActivity) getActivity()).open(
-                    new AppointmentsFragment(),
-                    getString(R.string.nav_appointments), false);
-        }
     }
 }

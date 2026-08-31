@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ir.artor.badoki.R;
 import ir.artor.badoki.api.Models;
 import ir.artor.badoki.util.Fmt;
+import ir.artor.badoki.util.Jalali;
 import ir.artor.badoki.util.StarRow;
 
 import java.time.Instant;
@@ -75,7 +76,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.VH> {
         try {
             LocalDateTime dt = LocalDateTime.ofInstant(
                     Instant.parse(iso), ZoneId.systemDefault());
-            return Fmt.fa(dt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+            Jalali.JDate j = Jalali.toJalali(dt.toLocalDate());
+            String date = String.format("%04d/%02d/%02d", j.jy, j.jm, j.jd);
+            return Fmt.fa(date);
         } catch (Exception e) {
             return "";
         }
