@@ -85,6 +85,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshBadge();
         load();
     }
 
@@ -200,5 +201,11 @@ public class DashboardFragment extends Fragment {
     private void openDetail(long doctorId) {
         ((MainActivity) requireActivity()).open(
                 DoctorDetailFragment.newInstance(doctorId), "", true);
+    }
+
+    private void refreshBadge() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).refreshUnreadBadge();
+        }
     }
 }

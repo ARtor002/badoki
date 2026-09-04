@@ -70,6 +70,7 @@ public class DoctorDashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshBadge();
         load();
     }
 
@@ -131,6 +132,12 @@ public class DoctorDashboardFragment extends Fragment {
             nextDetail.setText(detail);
         } else {
             nextCard.setVisibility(View.GONE);
+        }
+    }
+
+    private void refreshBadge() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).refreshUnreadBadge();
         }
     }
 }

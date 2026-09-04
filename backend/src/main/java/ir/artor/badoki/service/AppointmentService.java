@@ -268,13 +268,14 @@ public class AppointmentService {
             if (a.getStatus() == AppointmentStatus.PENDING) {
                 a.setStatus(AppointmentStatus.CANCELED);
                 notificationService.notifyUser(a.getPatient().getId(), "انقضای نوبت",
-                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
-                                + " به دلیل عدم تأیید توسط پزشک منقضی شد.",
+                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                                + Jalali.faDate(a.getDate()) + " به دلیل عدم تأیید توسط پزشک منقضی شد.",
                         "APPOINTMENT_EXPIRED");
             } else if (a.getStatus() == AppointmentStatus.CONFIRMED) {
                 a.setStatus(AppointmentStatus.COMPLETED);
                 notificationService.notifyUser(a.getPatient().getId(), "پایان نوبت",
-                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ " + a.getDate()
+                        "نوبت شما با «" + a.getDoctor().getFullName() + "» در تاریخ "
+                                + Jalali.faDate(a.getDate()) + " ساعت " + Jalali.faTime(a.getTime())
                                 + " به پایان رسید.",
                         "APPOINTMENT_COMPLETED");
             }
