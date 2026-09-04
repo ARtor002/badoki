@@ -76,8 +76,10 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
         }
 
         holder.status.setText(statusLabel(holder.itemView, a.status));
-        holder.status.setBackgroundTintList(ColorStateList.valueOf(statusBg(holder.itemView, a.status)));
-        holder.status.setTextColor(statusText(holder.itemView, a.status));
+        android.content.Context ctx = holder.itemView.getContext();
+        holder.status.setBackgroundTintList(ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(ctx, statusBg(holder.itemView, a.status))));
+        holder.status.setTextColor(androidx.core.content.ContextCompat.getColor(ctx, statusText(holder.itemView, a.status)));
 
         holder.datetime.setText(Fmt.dateFull(holder.itemView.getContext(), a.date)
                 + "  •  " + Fmt.faTime(a.time));
@@ -89,8 +91,10 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
 
         boolean pending = "PENDING".equals(a.status);
         boolean confirmed = "CONFIRMED".equals(a.status);
+        // دکمه «انجام شد» فقط برای نوبت‌هایی که زمانشان رسیده یا گذشته مجاز است
+        boolean canComplete = confirmed && !java.time.LocalDate.parse(a.date).isAfter(java.time.LocalDate.now());
         holder.btnConfirm.setVisibility(pending ? View.VISIBLE : View.GONE);
-        holder.btnComplete.setVisibility(confirmed ? View.VISIBLE : View.GONE);
+        holder.btnComplete.setVisibility(canComplete ? View.VISIBLE : View.GONE);
         holder.btnCancel.setVisibility((pending || confirmed) ? View.VISIBLE : View.GONE);
 
         holder.btnConfirm.setOnClickListener(v -> {

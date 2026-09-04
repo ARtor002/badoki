@@ -93,8 +93,10 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         holder.specialty.setText(a.specialty);
 
         holder.status.setText(statusLabel(holder.itemView, a.status));
-        holder.status.setBackgroundTintList(ColorStateList.valueOf(statusBg(holder.itemView, a.status)));
-        holder.status.setTextColor(statusText(holder.itemView, a.status));
+        android.content.Context ctx = holder.itemView.getContext();
+        holder.status.setBackgroundTintList(ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(ctx, statusBg(holder.itemView, a.status))));
+        holder.status.setTextColor(androidx.core.content.ContextCompat.getColor(ctx, statusText(holder.itemView, a.status)));
 
         holder.datetime.setText(Fmt.dateFull(holder.itemView.getContext(), a.date)
                 + "  •  " + Fmt.faTime(a.time));

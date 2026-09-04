@@ -143,8 +143,10 @@ public class AdminUsersFragment extends Fragment {
             holder.email.setText(u.email);
             holder.role.setText(roleLabel(u.role));
             holder.role.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(roleBg(u.role)));
-            holder.role.setTextColor(roleText(u.role));
+                    android.content.res.ColorStateList.valueOf(
+                            androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), roleBg(u.role))));
+            holder.role.setTextColor(androidx.core.content.ContextCompat.getColor(
+                    holder.itemView.getContext(), roleText(u.role)));
         }
 
         @Override

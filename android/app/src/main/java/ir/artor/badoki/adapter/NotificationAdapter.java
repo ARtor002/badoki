@@ -80,7 +80,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 colorRes = R.color.onSurfaceVariant;
         }
         holder.icon.setBackgroundTintList(ColorStateList.valueOf(
-                holder.itemView.getContext().getColor(colorRes)));
+                androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), colorRes)));
         holder.icon.setCompoundDrawablesWithIntrinsicBounds(
                 iconRes, 0, 0, 0);
 
